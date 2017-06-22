@@ -1,6 +1,8 @@
 #ifndef ULTRAGRID_WINDOW_HPP
 #define ULTRAGRID_WINDOW_HPP
 
+#include <QProcess>
+
 #include "ui_ultragrid_window.h"
 
 class UltragridWindow : public QMainWindow{
@@ -11,6 +13,14 @@ public:
 
 private:
 	Ui::UltragridWindow ui;
+
+	QString ultragridExecutable;
+	QProcess process;
+
+public slots:
+	void about();
+	void outputAvailable();
+	void start();
 };
 
 
