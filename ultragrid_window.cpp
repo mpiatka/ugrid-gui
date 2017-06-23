@@ -18,6 +18,14 @@ UltragridWindow::UltragridWindow(QWidget *parent): QMainWindow(parent){
 	connect(ui.startButton, SIGNAL(clicked()), this, SLOT(start()));
 	connect(&process, SIGNAL(readyReadStandardOutput()), this, SLOT(outputAvailable()));
 	connect(&process, SIGNAL(readyReadStandardError()), this, SLOT(outputAvailable()));
+
+	connect(ui.videoSourceComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(setArgs()));
+	connect(ui.videoDisplayComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(setArgs()));
+	connect(ui.networkDestinationEdit, SIGNAL(textEdited(const QString &)), this, SLOT(setArgs()));
+
+	connect(ui.arguments, SIGNAL(textChanged(const QString &)), this, SLOT(editArgs(const QString &)));
+	connect(ui.editCheckBox, SIGNAL(toggled(bool)), this, SLOT(setArgs()));
+	setArgs();
 }
 
 void UltragridWindow::about(){
@@ -30,11 +38,48 @@ void UltragridWindow::about(){
 }
 
 void UltragridWindow::outputAvailable(){
-	ui.terminal->append(process.readAll());
+	//ui.terminal->append(process.readAll());
+#if 1
+	ui.terminal->moveCursor(QTextCursor::End);
+	ui.terminal->insertPlainText(process.readAll());
+	ui.terminal->moveCursor(QTextCursor::End);
+#endif
 }
 
 void UltragridWindow::start(){
+	if(process.pid() > 0){
+		process.terminate();
+		return;
+	}
+
 	QString command(ultragridExecutable);
+
+	command += " ";
+	command += launchArgs;
 	process.setProcessChannelMode(QProcess::MergedChannels);
 	process.start(command);
+}
+
+void UltragridWindow::editArgs(const QString &text){
+	launchArgs = text;
+}
+
+void UltragridWindow::setArgs(){
+	launchArgs = "";
+
+	if(ui.videoSourceComboBox->currentText() != "none"){
+		launchArgs += "-t ";
+		launchArgs += ui.videoSourceComboBox->currentText();
+		launchArgs += " ";
+	}
+
+	if(ui.videoDisplayComboBox->currentText() != "none"){
+		launchArgs += "-d ";
+		launchArgs += ui.videoDisplayComboBox->currentText();
+		launchArgs += " ";
+	}
+
+	launchArgs += ui.networkDestinationEdit->text();
+
+	ui.arguments->setText(launchArgs);
 }

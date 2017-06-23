@@ -17,10 +17,15 @@ private:
 	QString ultragridExecutable;
 	QProcess process;
 
+	QString launchArgs;
+
 public slots:
 	void about();
 	void outputAvailable();
 	void start();
+
+	void editArgs(const QString &text);
+	void setArgs();
 };
 
 

@@ -17,7 +17,7 @@
    <string/>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QVBoxLayout" name="verticalLayout_5" stretch="6,1,1">
+   <layout class="QVBoxLayout" name="verticalLayout_5" stretch="6,1,1,0">
     <item>
      <layout class="QHBoxLayout" name="horizontalLayout">
       <property name="sizeConstraint">
@@ -140,30 +140,24 @@
          <property name="fieldGrowthPolicy">
           <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
          </property>
-         <item row="1" column="0">
-          <widget class="QLabel" name="videoSourceLabel">
-           <property name="text">
-            <string>Source</string>
-           </property>
-          </widget>
-         </item>
-         <item row="3" column="0">
-          <widget class="QLabel" name="videoModeLabel">
-           <property name="text">
-            <string>Mode</string>
-           </property>
-          </widget>
-         </item>
-         <item row="3" column="1">
-          <widget class="QComboBox" name="videoModeComboBox"/>
-         </item>
-         <item row="1" column="1">
+         <item row="0" column="1">
           <layout class="QHBoxLayout" name="horizontalLayout_2">
            <property name="topMargin">
             <number>0</number>
            </property>
            <item>
-            <widget class="QComboBox" name="videoSourceComboBox"/>
+            <widget class="QComboBox" name="videoSourceComboBox">
+             <item>
+              <property name="text">
+               <string>none</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>testcard</string>
+              </property>
+             </item>
+            </widget>
            </item>
            <item>
             <widget class="QToolButton" name="videoSourceSettingsButton">
@@ -174,6 +168,23 @@
            </item>
           </layout>
          </item>
+         <item row="0" column="0">
+          <widget class="QLabel" name="videoSourceLabel">
+           <property name="text">
+            <string>Source</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="0">
+          <widget class="QLabel" name="videoModeLabel">
+           <property name="text">
+            <string>Mode</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="1">
+          <widget class="QComboBox" name="videoModeComboBox"/>
+         </item>
         </layout>
        </widget>
       </item>
@@ -183,6 +194,9 @@
          <string>Video Display</string>
         </property>
         <layout class="QFormLayout" name="formLayout_3">
+         <property name="fieldGrowthPolicy">
+          <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
+         </property>
          <item row="0" column="0">
           <widget class="QLabel" name="label_3">
            <property name="text">
@@ -191,7 +205,23 @@
           </widget>
          </item>
          <item row="0" column="1">
-          <widget class="QComboBox" name="videoDisplayComboBox"/>
+          <widget class="QComboBox" name="videoDisplayComboBox">
+           <item>
+            <property name="text">
+             <string>none</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>gl</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>sdl</string>
+            </property>
+           </item>
+          </widget>
          </item>
         </layout>
         <zorder>videoDisplayComboBox</zorder>
@@ -359,6 +389,42 @@
       </item>
      </layout>
     </item>
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout_3">
+      <property name="spacing">
+       <number>0</number>
+      </property>
+      <property name="topMargin">
+       <number>5</number>
+      </property>
+      <item>
+       <widget class="QCheckBox" name="editCheckBox">
+        <property name="text">
+         <string>Edit arguments</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLineEdit" name="arguments">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <property name="dragEnabled">
+         <bool>false</bool>
+        </property>
+        <property name="readOnly">
+         <bool>false</bool>
+        </property>
+        <property name="placeholderText">
+         <string/>
+        </property>
+        <property name="clearButtonEnabled">
+         <bool>false</bool>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
    </layout>
   </widget>
   <widget class="QMenuBar" name="menubar">
@@ -449,6 +515,134 @@
     <hint type="destinationlabel">
      <x>831</x>
      <y>244</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>editCheckBox</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>arguments</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>70</x>
+     <y>682</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>609</x>
+     <y>683</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>editCheckBox</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>groupBox_2</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>70</x>
+     <y>682</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>142</x>
+     <y>606</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>editCheckBox</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>groupBox</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>70</x>
+     <y>682</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>142</x>
+     <y>486</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>editCheckBox</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>groupBox_3</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>70</x>
+     <y>682</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>142</x>
+     <y>486</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>editCheckBox</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>groupBox_5</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>70</x>
+     <y>682</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>142</x>
+     <y>486</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>editCheckBox</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>groupBox_7</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>70</x>
+     <y>682</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>142</x>
+     <y>486</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>editCheckBox</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>groupBox_4</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>70</x>
+     <y>682</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>142</x>
+     <y>486</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>editCheckBox</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>groupBox_6</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>70</x>
+     <y>682</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>142</x>
+     <y>486</y>
     </hint>
    </hints>
   </connection>
