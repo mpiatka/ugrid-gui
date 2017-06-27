@@ -18,6 +18,7 @@ private:
 	QProcess process;
 
 	QString launchArgs;
+	QStringList getOptionsForParam(QString param);
 
 public slots:
 	void about();

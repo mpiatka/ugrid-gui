@@ -21,10 +21,36 @@ UltragridWindow::UltragridWindow(QWidget *parent): QMainWindow(parent){
 
 	connect(ui.videoSourceComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(setArgs()));
 	connect(ui.videoDisplayComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(setArgs()));
+	connect(ui.videoCompressionComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(setArgs()));
+	connect(ui.audioSourceComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(setArgs()));
+	connect(ui.audioPlaybackComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(setArgs()));
+	connect(ui.audioCompressionComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(setArgs()));
 	connect(ui.networkDestinationEdit, SIGNAL(textEdited(const QString &)), this, SLOT(setArgs()));
 
 	connect(ui.arguments, SIGNAL(textChanged(const QString &)), this, SLOT(editArgs(const QString &)));
 	connect(ui.editCheckBox, SIGNAL(toggled(bool)), this, SLOT(setArgs()));
+	
+	QStringList availVals;
+
+	availVals = getOptionsForParam(QString("-t help"));
+	ui.videoSourceComboBox->addItems(availVals);
+
+	availVals = getOptionsForParam(QString("-d help"));
+	ui.videoDisplayComboBox->addItems(availVals);
+
+	availVals = getOptionsForParam(QString("-c help"));
+	ui.videoCompressionComboBox->addItems(availVals);
+
+	availVals = getOptionsForParam(QString("-s help"));
+	ui.audioSourceComboBox->addItems(availVals);
+
+	availVals = getOptionsForParam(QString("-r help"));
+	ui.audioPlaybackComboBox->addItems(availVals);
+
+	availVals = getOptionsForParam(QString("--audio-codec help"));
+	ui.audioCompressionComboBox->addItems(availVals);
+
+
 	setArgs();
 }
 
@@ -79,7 +105,61 @@ void UltragridWindow::setArgs(){
 		launchArgs += " ";
 	}
 
+	if(ui.videoCompressionComboBox->currentText() != "none"){
+		launchArgs += "-c ";
+		launchArgs += ui.videoCompressionComboBox->currentText();
+		launchArgs += " ";
+	}
+
+	if(ui.audioSourceComboBox->currentText() != "none"){
+		launchArgs += "-s ";
+		launchArgs += ui.audioSourceComboBox->currentText();
+		launchArgs += " ";
+	}
+
+	if(ui.audioPlaybackComboBox->currentText() != "none"){
+		launchArgs += "-r ";
+		launchArgs += ui.audioPlaybackComboBox->currentText();
+		launchArgs += " ";
+	}
+
+	if(ui.audioCompressionComboBox->currentText() != "none"){
+		launchArgs += "--audio-codec ";
+		launchArgs += ui.audioCompressionComboBox->currentText();
+		launchArgs += " ";
+	}
+
 	launchArgs += ui.networkDestinationEdit->text();
 
 	ui.arguments->setText(launchArgs);
+}
+
+QStringList UltragridWindow::getOptionsForParam(QString param){
+	QStringList out;
+
+	QProcess process;
+
+	QString command = ultragridExecutable;
+
+	command += " ";
+	command += param;
+
+	process.start(command);
+
+	process.waitForFinished();
+	QByteArray output = process.readAllStandardOutput();
+	QList<QByteArray> lines = output.split('\n');
+
+	foreach ( const QByteArray &line, lines ) {
+		if(line.size() > 0 && QChar(line[0]).isSpace()) {
+			QString opt = QString(line).trimmed();
+			bool append = opt != "none";
+			if(opt.startsWith("--")) append = false;
+			if(opt.contains("unavailable")) append = false;
+			if(append)
+				out.append(QString(line).trimmed());
+		}
+	}
+
+	return out;
 }

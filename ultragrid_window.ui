@@ -152,11 +152,6 @@
                <string>none</string>
               </property>
              </item>
-             <item>
-              <property name="text">
-               <string>testcard</string>
-              </property>
-             </item>
             </widget>
            </item>
            <item>
@@ -211,16 +206,6 @@
              <string>none</string>
             </property>
            </item>
-           <item>
-            <property name="text">
-             <string>gl</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>sdl</string>
-            </property>
-           </item>
           </widget>
          </item>
         </layout>
@@ -242,7 +227,13 @@
           </widget>
          </item>
          <item row="0" column="1">
-          <widget class="QComboBox" name="videoCompressionComboBox"/>
+          <widget class="QComboBox" name="videoCompressionComboBox">
+           <item>
+            <property name="text">
+             <string>none</string>
+            </property>
+           </item>
+          </widget>
          </item>
          <item row="1" column="0">
           <widget class="QLabel" name="label_8">
@@ -308,7 +299,13 @@
           </widget>
          </item>
          <item row="0" column="1">
-          <widget class="QComboBox" name="audioSourceComboBox"/>
+          <widget class="QComboBox" name="audioSourceComboBox">
+           <item>
+            <property name="text">
+             <string>none</string>
+            </property>
+           </item>
+          </widget>
          </item>
          <item row="1" column="0">
           <widget class="QLabel" name="label_5">
@@ -344,7 +341,13 @@
           </widget>
          </item>
          <item row="0" column="1">
-          <widget class="QComboBox" name="audioPlaybackComboBox"/>
+          <widget class="QComboBox" name="audioPlaybackComboBox">
+           <item>
+            <property name="text">
+             <string>none</string>
+            </property>
+           </item>
+          </widget>
          </item>
         </layout>
        </widget>
@@ -363,7 +366,13 @@
           </widget>
          </item>
          <item row="0" column="1">
-          <widget class="QComboBox" name="audioCompressionComboBox"/>
+          <widget class="QComboBox" name="audioCompressionComboBox">
+           <item>
+            <property name="text">
+             <string>none</string>
+            </property>
+           </item>
+          </widget>
          </item>
         </layout>
        </widget>
