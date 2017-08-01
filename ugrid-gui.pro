@@ -8,8 +8,11 @@ INCLUDEPATH += .
 
 QT += widgets
 
+CONFIG += c++11
+
 # Input
-HEADERS += ultragrid_window.hpp
+HEADERS += ultragrid_window.hpp ultragrid_option.hpp
 FORMS += ultragrid_window.ui
 SOURCES += ultragrid_window.cpp \
+	ultragrid_option.cpp \
 	main.cpp

@@ -2,8 +2,11 @@
 #define ULTRAGRID_WINDOW_HPP
 
 #include <QProcess>
+#include <vector>
+#include <memory>
 
 #include "ui_ultragrid_window.h"
+#include "ultragrid_option.hpp"
 
 class UltragridWindow : public QMainWindow{
 	Q_OBJECT
@@ -19,6 +22,8 @@ private:
 
 	QString launchArgs;
 	QStringList getOptionsForParam(QString param);
+
+	std::vector<std::unique_ptr<UltragridOption>> opts;
 
 public slots:
 	void about();
