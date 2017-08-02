@@ -36,9 +36,8 @@ UltragridWindow::UltragridWindow(QWidget *parent): QMainWindow(parent){
 				ui.videoModeComboBox,
 				ultragridExecutable));
 
-	opts.emplace_back(new GenericOption(ui.videoDisplayComboBox,
-				ultragridExecutable,
-				QString("-d")));
+	opts.emplace_back(new DisplayOption(ui.videoDisplayComboBox,
+				ultragridExecutable));
 
 	opts.emplace_back(new GenericOption(ui.videoCompressionComboBox,
 				ultragridExecutable,

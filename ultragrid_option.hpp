@@ -16,6 +16,8 @@ protected:
 			const QString &helpCommand);
 
 	void resetComboBox(QComboBox *box);
+	void setAdvanced(bool advanced) { this->advanced = advanced; }
+	bool advanced;
 
 private:
 
@@ -42,6 +44,8 @@ private:
 	QComboBox *mode;
 	QString ultragridExecutable;
 
+	const static QString whiteList[];
+
 private slots:
 	void srcChanged();
 };
@@ -60,6 +64,8 @@ public:
 private:
 	QComboBox *disp;
 	QString ultragridExecutable;
+
+	const static QString whiteList[];
 };
 
 class GenericOption : public UltragridOption{

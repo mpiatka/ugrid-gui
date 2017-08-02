@@ -36,6 +36,8 @@ QStringList UltragridOption::getAvailOpts(const QString &executable,
 	return out;
 }
 
+const QString SourceOption::whiteList[] = {"testcard", "screen"};
+
 SourceOption::SourceOption(QComboBox *src,
 		QComboBox *mode,
 		QString ultragridExecutable) : src(src),
@@ -61,7 +63,12 @@ QString SourceOption::getLaunchParam(){
 void SourceOption::queryAvailOpts(){
 	resetComboBox(src);
 	QStringList opts = getAvailOpts(ultragridExecutable, QString("-t help"));
-	src->addItems(opts);
+
+	for(const auto& i : whiteList){
+		if(opts.contains(i)){
+			src->addItem(i);
+		}
+	}
 }
 
 void SourceOption::srcChanged(){
@@ -70,6 +77,42 @@ void SourceOption::srcChanged(){
 
 	if(src->currentText() == "testcard"){
 		mode->addItem(QString("1280x720"), QVariant(QString(":1280:720:30:UYVY")));
+	} else if(src->currentText() == "screen"){
+		mode->addItem(QString("60 fps"), QVariant(QString(":fps=60")));
+		mode->addItem(QString("30 fps"), QVariant(QString(":fps=30")));
+		mode->addItem(QString("24 fps"), QVariant(QString(":fps=24")));
+	}
+}
+
+const QString DisplayOption::whiteList[] = {"gl", "sdl"};
+
+DisplayOption::DisplayOption(QComboBox *disp,
+		QString ultragridExecutable): disp(disp),
+	ultragridExecutable(ultragridExecutable)
+{
+
+}
+
+QString DisplayOption::getLaunchParam(){
+	QString param;
+
+	if(disp->currentText() != "none"){
+		param += "-d ";
+		param += disp->currentText();
+		param += " ";
+	}
+
+	return param;
+}
+
+void DisplayOption::queryAvailOpts(){
+	resetComboBox(disp);
+	QStringList opts = getAvailOpts(ultragridExecutable, QString("-d help"));
+
+	for(const auto& i : whiteList){
+		if(opts.contains(i)){
+			disp->addItem(i);
+		}
 	}
 }
 
