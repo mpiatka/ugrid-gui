@@ -20,6 +20,7 @@ UltragridWindow::UltragridWindow(QWidget *parent): QMainWindow(parent){
 	connect(&process, SIGNAL(readyReadStandardError()), this, SLOT(outputAvailable()));
 
 	connect(ui.videoSourceComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(setArgs()));
+	connect(ui.videoModeComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(setArgs()));
 	connect(ui.videoDisplayComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(setArgs()));
 	connect(ui.videoCompressionComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(setArgs()));
 	connect(ui.audioSourceComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(setArgs()));
@@ -29,8 +30,7 @@ UltragridWindow::UltragridWindow(QWidget *parent): QMainWindow(parent){
 
 	connect(ui.arguments, SIGNAL(textChanged(const QString &)), this, SLOT(editArgs(const QString &)));
 	connect(ui.editCheckBox, SIGNAL(toggled(bool)), this, SLOT(setArgs()));
-	
-	QStringList availVals;
+	connect(ui.actionRefresh, SIGNAL(triggered()), this, SLOT(queryOpts()));
 
 	opts.emplace_back(new SourceOption(ui.videoSourceComboBox,
 				ui.videoModeComboBox,
@@ -56,11 +56,7 @@ UltragridWindow::UltragridWindow(QWidget *parent): QMainWindow(parent){
 				ultragridExecutable,
 				QString("--audio-codec")));
 
-	for(auto &opt : opts){
-		opt->queryAvailOpts();
-	}
-
-	setArgs();
+	queryOpts();
 }
 
 void UltragridWindow::about(){
@@ -109,4 +105,12 @@ void UltragridWindow::setArgs(){
 	launchArgs += ui.networkDestinationEdit->text();
 
 	ui.arguments->setText(launchArgs);
+}
+
+void UltragridWindow::queryOpts(){
+	for(auto &opt : opts){
+		opt->queryAvailOpts();
+	}
+
+	setArgs();
 }

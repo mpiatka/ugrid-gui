@@ -2,10 +2,11 @@
 #define ULTRAGRID_OPTION_HPP
 
 #include <QString>
+#include <QObject>
 
 class QComboBox;
 
-class UltragridOption{
+class UltragridOption : public QObject{
 public:
 	virtual QString getLaunchParam() = 0;
 	virtual void queryAvailOpts() = 0;
@@ -14,11 +15,14 @@ protected:
 	QStringList getAvailOpts(const QString &executable,
 			const QString &helpCommand);
 
+	void resetComboBox(QComboBox *box);
+
 private:
 
 };
 
 class SourceOption : public UltragridOption{
+	Q_OBJECT
 public:
 	SourceOption() = default;
 
@@ -37,6 +41,9 @@ private:
 	QComboBox *src;
 	QComboBox *mode;
 	QString ultragridExecutable;
+
+private slots:
+	void srcChanged();
 };
 
 class DisplayOption : public UltragridOption{

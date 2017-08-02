@@ -42,7 +42,7 @@ SourceOption::SourceOption(QComboBox *src,
 	mode(mode),
 	ultragridExecutable(ultragridExecutable)
 {
-
+	connect(src, SIGNAL(currentIndexChanged(int)), this, SLOT(srcChanged()));
 }
 
 QString SourceOption::getLaunchParam(){
@@ -51,6 +51,7 @@ QString SourceOption::getLaunchParam(){
 	if(src->currentText() != "none"){
 		param += "-t ";
 		param += src->currentText();
+		param += mode->currentData().toString();
 		param += " ";
 	}
 
@@ -58,8 +59,18 @@ QString SourceOption::getLaunchParam(){
 }
 
 void SourceOption::queryAvailOpts(){
+	resetComboBox(src);
 	QStringList opts = getAvailOpts(ultragridExecutable, QString("-t help"));
 	src->addItems(opts);
+}
+
+void SourceOption::srcChanged(){
+	mode->clear();
+	mode->addItem(QString("Default"), QVariant(QString("")));
+
+	if(src->currentText() == "testcard"){
+		mode->addItem(QString("1280x720"), QVariant(QString(":1280:720:30:UYVY")));
+	}
 }
 
 GenericOption::GenericOption(QComboBox *box,
@@ -85,7 +96,13 @@ QString GenericOption::getLaunchParam(){
 }
 
 void GenericOption::queryAvailOpts(){
+	resetComboBox(box);
 	QString helpCommand = opt + " help";
 	QStringList opts = getAvailOpts(ultragridExecutable, helpCommand);
 	box->addItems(opts);
+}
+
+void UltragridOption::resetComboBox(QComboBox *box){
+	box->clear();
+	box->addItem(QString("none"));
 }

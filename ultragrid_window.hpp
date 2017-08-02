@@ -25,6 +25,7 @@ private:
 
 	std::vector<std::unique_ptr<UltragridOption>> opts;
 
+
 public slots:
 	void about();
 	void outputAvailable();
@@ -32,6 +33,9 @@ public slots:
 
 	void editArgs(const QString &text);
 	void setArgs();
+
+private slots:
+	void queryOpts();
 };
 
 

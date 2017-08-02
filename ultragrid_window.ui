@@ -111,7 +111,7 @@
          <number>40</number>
         </property>
         <property name="placeholderText">
-         <string>Test test test</string>
+         <string/>
         </property>
        </widget>
       </item>
@@ -146,13 +146,7 @@
             <number>0</number>
            </property>
            <item>
-            <widget class="QComboBox" name="videoSourceComboBox">
-             <item>
-              <property name="text">
-               <string>none</string>
-              </property>
-             </item>
-            </widget>
+            <widget class="QComboBox" name="videoSourceComboBox"/>
            </item>
            <item>
             <widget class="QToolButton" name="videoSourceSettingsButton">
@@ -200,13 +194,7 @@
           </widget>
          </item>
          <item row="0" column="1">
-          <widget class="QComboBox" name="videoDisplayComboBox">
-           <item>
-            <property name="text">
-             <string>none</string>
-            </property>
-           </item>
-          </widget>
+          <widget class="QComboBox" name="videoDisplayComboBox"/>
          </item>
         </layout>
         <zorder>videoDisplayComboBox</zorder>
@@ -227,13 +215,7 @@
           </widget>
          </item>
          <item row="0" column="1">
-          <widget class="QComboBox" name="videoCompressionComboBox">
-           <item>
-            <property name="text">
-             <string>none</string>
-            </property>
-           </item>
-          </widget>
+          <widget class="QComboBox" name="videoCompressionComboBox"/>
          </item>
          <item row="1" column="0">
           <widget class="QLabel" name="label_8">
@@ -299,13 +281,7 @@
           </widget>
          </item>
          <item row="0" column="1">
-          <widget class="QComboBox" name="audioSourceComboBox">
-           <item>
-            <property name="text">
-             <string>none</string>
-            </property>
-           </item>
-          </widget>
+          <widget class="QComboBox" name="audioSourceComboBox"/>
          </item>
          <item row="1" column="0">
           <widget class="QLabel" name="label_5">
@@ -341,13 +317,7 @@
           </widget>
          </item>
          <item row="0" column="1">
-          <widget class="QComboBox" name="audioPlaybackComboBox">
-           <item>
-            <property name="text">
-             <string>none</string>
-            </property>
-           </item>
-          </widget>
+          <widget class="QComboBox" name="audioPlaybackComboBox"/>
          </item>
         </layout>
        </widget>
@@ -366,13 +336,7 @@
           </widget>
          </item>
          <item row="0" column="1">
-          <widget class="QComboBox" name="audioCompressionComboBox">
-           <item>
-            <property name="text">
-             <string>none</string>
-            </property>
-           </item>
-          </widget>
+          <widget class="QComboBox" name="audioCompressionComboBox"/>
          </item>
         </layout>
        </widget>
@@ -459,6 +423,8 @@
      <string>&amp;Tools</string>
     </property>
     <addaction name="actionShow_Tterminal"/>
+    <addaction name="separator"/>
+    <addaction name="actionRefresh"/>
    </widget>
    <widget class="QMenu" name="menu_Help">
     <property name="title">
@@ -490,6 +456,11 @@
    </property>
    <property name="text">
     <string>Show &amp;Terminal</string>
+   </property>
+  </action>
+  <action name="actionRefresh">
+   <property name="text">
+    <string>Refresh</string>
    </property>
   </action>
  </widget>
