@@ -148,13 +148,6 @@
            <item>
             <widget class="QComboBox" name="videoSourceComboBox"/>
            </item>
-           <item>
-            <widget class="QToolButton" name="videoSourceSettingsButton">
-             <property name="text">
-              <string>...</string>
-             </property>
-            </widget>
-           </item>
           </layout>
          </item>
          <item row="0" column="0">

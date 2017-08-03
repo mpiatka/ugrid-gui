@@ -36,6 +36,7 @@ public slots:
 
 private slots:
 	void queryOpts();
+	void setAdvanced(bool);
 };
 
 

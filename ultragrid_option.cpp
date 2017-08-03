@@ -1,6 +1,7 @@
 #include <QStringList>
 #include <QProcess>
 #include <QComboBox>
+#include <QLineEdit>
 
 #include "ultragrid_option.hpp"
 
@@ -36,13 +37,14 @@ QStringList UltragridOption::getAvailOpts(const QString &executable,
 	return out;
 }
 
-const QString SourceOption::whiteList[] = {"testcard", "screen"};
+const QStringList SourceOption::whiteList = {"testcard", "screen"};
 
 SourceOption::SourceOption(QComboBox *src,
 		QComboBox *mode,
-		QString ultragridExecutable) : src(src),
-	mode(mode),
-	ultragridExecutable(ultragridExecutable)
+		const QString& ultragridExecutable) :
+	UltragridOption(ultragridExecutable, QString("-t")),
+	src(src),
+	mode(mode)
 {
 	connect(src, SIGNAL(currentIndexChanged(int)), this, SLOT(srcChanged()));
 }
@@ -64,8 +66,8 @@ void SourceOption::queryAvailOpts(){
 	resetComboBox(src);
 	QStringList opts = getAvailOpts(ultragridExecutable, QString("-t help"));
 
-	for(const auto& i : whiteList){
-		if(opts.contains(i)){
+	for(const auto& i : opts){
+		if(whiteList.contains(i) || advanced){
 			src->addItem(i);
 		}
 	}
@@ -76,7 +78,15 @@ void SourceOption::srcChanged(){
 	mode->addItem(QString("Default"), QVariant(QString("")));
 
 	if(src->currentText() == "testcard"){
-		mode->addItem(QString("1280x720"), QVariant(QString(":1280:720:30:UYVY")));
+		mode->addItem(QString("1280x720, 30 fps"), QVariant(QString(":1280:720:30:UYVY")));
+		mode->addItem(QString("1280x720, 24 fps"), QVariant(QString(":1280:720:24:UYVY")));
+		mode->addItem(QString("1280x720, 60 fps"), QVariant(QString(":1280:720:60:UYVY")));
+		mode->addItem(QString("1920x1080, 30 fps"), QVariant(QString(":1920:1080:30:UYVY")));
+		mode->addItem(QString("1920x1080, 24 fps"), QVariant(QString(":1920:1080:24:UYVY")));
+		mode->addItem(QString("1920x1080, 60 fps"), QVariant(QString(":1920:1080:60:UYVY")));
+		mode->addItem(QString("3840x2160, 30 fps"), QVariant(QString(":3840:2160:30:UYVY")));
+		mode->addItem(QString("3840x2160, 24 fps"), QVariant(QString(":3840:2160:24:UYVY")));
+		mode->addItem(QString("3840x2160, 60 fps"), QVariant(QString(":3840:2160:60:UYVY")));
 	} else if(src->currentText() == "screen"){
 		mode->addItem(QString("60 fps"), QVariant(QString(":fps=60")));
 		mode->addItem(QString("30 fps"), QVariant(QString(":fps=30")));
@@ -84,11 +94,12 @@ void SourceOption::srcChanged(){
 	}
 }
 
-const QString DisplayOption::whiteList[] = {"gl", "sdl"};
+const QStringList DisplayOption::whiteList = {"gl", "sdl"};
 
 DisplayOption::DisplayOption(QComboBox *disp,
-		QString ultragridExecutable): disp(disp),
-	ultragridExecutable(ultragridExecutable)
+		const QString& ultragridExecutable):
+	UltragridOption(ultragridExecutable, QString("-d")),
+	disp(disp)
 {
 
 }
@@ -109,18 +120,52 @@ void DisplayOption::queryAvailOpts(){
 	resetComboBox(disp);
 	QStringList opts = getAvailOpts(ultragridExecutable, QString("-d help"));
 
-	for(const auto& i : whiteList){
-		if(opts.contains(i)){
+	for(const auto& i : opts){
+		if(whiteList.contains(i) || advanced){
 			disp->addItem(i);
 		}
 	}
 }
 
+CompressOption::CompressOption(QComboBox *compress,
+		QLineEdit *bitrate,
+		const QString& ultragridExecutable) :
+	UltragridOption(ultragridExecutable, QString("-c")),
+	comp(compress),
+	bitrate(bitrate)
+{
+	
+}
+
+QString CompressOption::getLaunchParam(){
+	QString param;
+
+	if(comp->currentText() != "none"){
+		param += "-c ";
+		param += comp->currentData().toString();
+		if(!bitrate->text().isEmpty()){
+			param += ":bitrate=" + bitrate->text();
+		}
+		param += " ";
+	}
+
+	return param;
+}
+
+void CompressOption::queryAvailOpts(){
+	resetComboBox(comp);
+
+	comp->addItem(QString("H.264"), QVariant(QString("libavcodec:codec=H.264")));
+	comp->addItem(QString("H.265"), QVariant(QString("libavcodec:codec=H.265")));
+	comp->addItem(QString("MJPEG"), QVariant(QString("libavcodec:codec=MJPEG")));
+	comp->addItem(QString("VP8"), QVariant(QString("libavcodec:codec=VP8")));
+}
+
 GenericOption::GenericOption(QComboBox *box,
-		QString ultragridExecutable,
-		QString opt): box(box),
-	ultragridExecutable(ultragridExecutable),
-	opt(opt)
+		const QString& ultragridExecutable,
+		QString opt):
+	UltragridOption(ultragridExecutable, opt),
+	box(box)
 {
 
 }

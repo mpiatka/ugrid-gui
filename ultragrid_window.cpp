@@ -23,6 +23,7 @@ UltragridWindow::UltragridWindow(QWidget *parent): QMainWindow(parent){
 	connect(ui.videoModeComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(setArgs()));
 	connect(ui.videoDisplayComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(setArgs()));
 	connect(ui.videoCompressionComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(setArgs()));
+	connect(ui.videoBitrateEdit, SIGNAL(textChanged(const QString &)), this, SLOT(setArgs()));
 	connect(ui.audioSourceComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(setArgs()));
 	connect(ui.audioPlaybackComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(setArgs()));
 	connect(ui.audioCompressionComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(setArgs()));
@@ -31,6 +32,7 @@ UltragridWindow::UltragridWindow(QWidget *parent): QMainWindow(parent){
 	connect(ui.arguments, SIGNAL(textChanged(const QString &)), this, SLOT(editArgs(const QString &)));
 	connect(ui.editCheckBox, SIGNAL(toggled(bool)), this, SLOT(setArgs()));
 	connect(ui.actionRefresh, SIGNAL(triggered()), this, SLOT(queryOpts()));
+	connect(ui.networkAdvancedCheckBox, SIGNAL(toggled(bool)), this, SLOT(setAdvanced(bool)));
 
 	opts.emplace_back(new SourceOption(ui.videoSourceComboBox,
 				ui.videoModeComboBox,
@@ -39,9 +41,9 @@ UltragridWindow::UltragridWindow(QWidget *parent): QMainWindow(parent){
 	opts.emplace_back(new DisplayOption(ui.videoDisplayComboBox,
 				ultragridExecutable));
 
-	opts.emplace_back(new GenericOption(ui.videoCompressionComboBox,
-				ultragridExecutable,
-				QString("-c")));
+	opts.emplace_back(new CompressOption(ui.videoCompressionComboBox,
+				ui.videoBitrateEdit,
+				ultragridExecutable));
 
 	opts.emplace_back(new GenericOption(ui.audioSourceComboBox,
 				ultragridExecutable,
@@ -112,4 +114,11 @@ void UltragridWindow::queryOpts(){
 	}
 
 	setArgs();
+}
+
+void UltragridWindow::setAdvanced(bool adv){
+	for(auto &opt : opts){
+		opt->setAdvanced(adv);
+	}
+	queryOpts();
 }

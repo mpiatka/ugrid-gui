@@ -5,18 +5,30 @@
 #include <QObject>
 
 class QComboBox;
+class QLineEdit;
 
 class UltragridOption : public QObject{
 public:
 	virtual QString getLaunchParam() = 0;
 	virtual void queryAvailOpts() = 0;
 
+	void setExecutable(const QString &executable) { ultragridExecutable = executable; }
+	void setAdvanced(bool advanced) { this->advanced = advanced; }
+
 protected:
-	QStringList getAvailOpts(const QString &executable,
-			const QString &helpCommand);
+	UltragridOption(const QString& ultragridExecutable,
+			const QString& opt) :
+		ultragridExecutable(ultragridExecutable),
+		opt(opt),
+		advanced(false) {  }
+
+	QStringList getAvailOpts(const QString& executable,
+			const QString& helpCommand);
 
 	void resetComboBox(QComboBox *box);
-	void setAdvanced(bool advanced) { this->advanced = advanced; }
+
+	QString ultragridExecutable;
+	QString opt;
 	bool advanced;
 
 private:
@@ -26,25 +38,21 @@ private:
 class SourceOption : public UltragridOption{
 	Q_OBJECT
 public:
-	SourceOption() = default;
 
 	SourceOption(QComboBox *src,
 			QComboBox *mode,
-			QString ultragridExecutable);
+			const QString& ultragridExecutable);
 
 	void setSrcBox(QComboBox *src) { this->src = src; }
 	void setModeBox(QComboBox *mode) { this->mode = mode; }
-	void setExecutable(const QString &executable) { ultragridExecutable = executable; }
-
 
 	QString getLaunchParam() override;
 	void queryAvailOpts() override;
 private:
 	QComboBox *src;
 	QComboBox *mode;
-	QString ultragridExecutable;
 
-	const static QString whiteList[];
+	const static QStringList whiteList;
 
 private slots:
 	void srcChanged();
@@ -52,38 +60,40 @@ private slots:
 
 class DisplayOption : public UltragridOption{
 public:
-	DisplayOption() = default;
-
 	DisplayOption(QComboBox *disp,
-			QString ultragridExecutable);
-
-	void setExecutable(const QString &executable) { ultragridExecutable = executable; }
+			const QString& ultragridExecutable);
 
 	QString getLaunchParam() override;
 	void queryAvailOpts() override;
 private:
 	QComboBox *disp;
-	QString ultragridExecutable;
 
-	const static QString whiteList[];
+	const static QStringList whiteList;
+};
+
+class CompressOption : public UltragridOption{
+public:
+	CompressOption(QComboBox *compress,
+			QLineEdit *bitrate,
+			const QString& ultragridExecutable);
+
+	QString getLaunchParam() override;
+	void queryAvailOpts() override;
+private:
+	QComboBox *comp;
+	QLineEdit *bitrate;
 };
 
 class GenericOption : public UltragridOption{
 public:
-	GenericOption() = default;
-
 	GenericOption(QComboBox *box,
-			QString ultragridExecutable,
+			const QString& ultragridExecutable,
 			QString opt);
-
-	void setExecutable(const QString &executable) { ultragridExecutable = executable; }
 
 	QString getLaunchParam() override;
 	void queryAvailOpts() override;
 private:
 	QComboBox *box;
-	QString ultragridExecutable;
-	QString opt;
 };
 
 #endif
