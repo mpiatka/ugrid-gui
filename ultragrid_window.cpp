@@ -43,6 +43,7 @@ UltragridWindow::UltragridWindow(QWidget *parent): QMainWindow(parent){
 
 	opts.emplace_back(new CompressOption(ui.videoCompressionComboBox,
 				ui.videoBitrateEdit,
+				ui.videoBitrateLabel,
 				ultragridExecutable));
 
 	opts.emplace_back(new GenericOption(ui.audioSourceComboBox,

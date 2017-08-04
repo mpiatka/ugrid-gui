@@ -211,7 +211,7 @@
           <widget class="QComboBox" name="videoCompressionComboBox"/>
          </item>
          <item row="1" column="0">
-          <widget class="QLabel" name="label_8">
+          <widget class="QLabel" name="videoBitrateLabel">
            <property name="text">
             <string>Bitrate</string>
            </property>

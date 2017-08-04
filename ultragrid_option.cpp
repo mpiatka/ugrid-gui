@@ -2,6 +2,7 @@
 #include <QProcess>
 #include <QComboBox>
 #include <QLineEdit>
+#include <QLabel>
 
 #include "ultragrid_option.hpp"
 
@@ -129,12 +130,14 @@ void DisplayOption::queryAvailOpts(){
 
 CompressOption::CompressOption(QComboBox *compress,
 		QLineEdit *bitrate,
+		QLabel *label,
 		const QString& ultragridExecutable) :
 	UltragridOption(ultragridExecutable, QString("-c")),
 	comp(compress),
-	bitrate(bitrate)
+	bitrate(bitrate),
+	label(label)
 {
-	
+	connect(comp, SIGNAL(currentIndexChanged(int)), this, SLOT(compChanged()));
 }
 
 QString CompressOption::getLaunchParam(){
@@ -144,7 +147,11 @@ QString CompressOption::getLaunchParam(){
 		param += "-c ";
 		param += comp->currentData().toString();
 		if(!bitrate->text().isEmpty()){
-			param += ":bitrate=" + bitrate->text();
+			if(comp->currentText() == "JPEG"){
+				param += ":" + bitrate->text();
+			} else {
+				param += ":bitrate=" + bitrate->text();
+			}
 		}
 		param += " ";
 	}
@@ -159,6 +166,15 @@ void CompressOption::queryAvailOpts(){
 	comp->addItem(QString("H.265"), QVariant(QString("libavcodec:codec=H.265")));
 	comp->addItem(QString("MJPEG"), QVariant(QString("libavcodec:codec=MJPEG")));
 	comp->addItem(QString("VP8"), QVariant(QString("libavcodec:codec=VP8")));
+	comp->addItem(QString("JPEG"), QVariant(QString("jpeg")));
+}
+
+void CompressOption::compChanged(){
+	if(comp->currentText() == "JPEG"){
+		label->setText(QString("Jpeg quality"));
+	} else {
+		label->setText(QString("Bitrate"));
+	}
 }
 
 GenericOption::GenericOption(QComboBox *box,

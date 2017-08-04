@@ -6,6 +6,7 @@
 
 class QComboBox;
 class QLineEdit;
+class QLabel;
 
 class UltragridOption : public QObject{
 public:
@@ -72,9 +73,11 @@ private:
 };
 
 class CompressOption : public UltragridOption{
+	Q_OBJECT
 public:
 	CompressOption(QComboBox *compress,
 			QLineEdit *bitrate,
+			QLabel *label,
 			const QString& ultragridExecutable);
 
 	QString getLaunchParam() override;
@@ -82,6 +85,10 @@ public:
 private:
 	QComboBox *comp;
 	QLineEdit *bitrate;
+	QLabel *label;
+
+private slots:
+	void compChanged();
 };
 
 class GenericOption : public UltragridOption{
