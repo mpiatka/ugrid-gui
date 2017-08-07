@@ -58,7 +58,7 @@ QString SourceOption::getLaunchParam(){
 
 	if(src->currentText() != "none"){
 		param += "-t ";
-		param += src->currentText();
+		param += src->currentData().toString();
 		param += mode->currentData().toString();
 		param += " ";
 	}
@@ -72,7 +72,7 @@ void SourceOption::queryAvailOpts(){
 
 	for(const auto& i : opts){
 		if(whiteList.contains(i) || advanced){
-			src->addItem(i);
+			src->addItem(i, QVariant(i));
 		}
 	}
 
@@ -80,6 +80,9 @@ void SourceOption::queryAvailOpts(){
 		std::vector<Camera> cams = getCameras();
 		for(const auto& cam : cams){
 			std::cout << cam.name << ": " << cam.path << std::endl;
+			QString name = QString::fromStdString(cam.name);
+			QString opt = QString::fromStdString("v4l2:device=" + cam.path);
+			src->addItem(name, QVariant(opt));
 		}
 	}
 }
