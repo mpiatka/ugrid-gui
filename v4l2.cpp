@@ -6,14 +6,12 @@
 #include "v4l2.hpp"
 
 std::vector<Camera> getCameras(){
-	const int max = 32;
+	const int max = 64; //There can be only 64 /dev/videoN devices
 
 	std::vector<Camera> result;
 
 	int fd;
 	struct v4l2_capability video_cap;
-	//struct video_window video_win;
-	//struct video_picture video_pic;
 
 	for(int i = 0; i < max; i++){
 		std::string path = "/dev/video" + std::to_string(i);
