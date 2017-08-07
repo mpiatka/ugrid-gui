@@ -11,8 +11,9 @@ QT += widgets
 CONFIG += c++11
 
 # Input
-HEADERS += ultragrid_window.hpp ultragrid_option.hpp
+HEADERS += ultragrid_window.hpp ultragrid_option.hpp v4l2.hpp
 FORMS += ultragrid_window.ui
 SOURCES += ultragrid_window.cpp \
 	ultragrid_option.cpp \
+	v4l2.cpp \
 	main.cpp

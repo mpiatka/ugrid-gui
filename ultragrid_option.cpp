@@ -4,7 +4,10 @@
 #include <QLineEdit>
 #include <QLabel>
 
+#include <iostream>
+
 #include "ultragrid_option.hpp"
+#include "v4l2.hpp"
 
 QStringList UltragridOption::getAvailOpts(const QString &executable,
 			const QString &helpCommand)
@@ -70,6 +73,13 @@ void SourceOption::queryAvailOpts(){
 	for(const auto& i : opts){
 		if(whiteList.contains(i) || advanced){
 			src->addItem(i);
+		}
+	}
+
+	if(opts.contains(QString("v4l2"))){
+		std::vector<Camera> cams = getCameras();
+		for(const auto& cam : cams){
+			std::cout << cam.name << ": " << cam.path << std::endl;
 		}
 	}
 }
