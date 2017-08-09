@@ -28,7 +28,6 @@
         <property name="autoFillBackground">
          <bool>false</bool>
         </property>
-        <zorder></zorder>
        </widget>
       </item>
       <item>
@@ -417,7 +416,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QSpinBox" name="spinBox">
+              <widget class="QSpinBox" name="multSpin">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                  <horstretch>0</horstretch>
@@ -438,19 +437,19 @@
               </widget>
              </item>
              <item>
-              <widget class="QSpinBox" name="spinBox_2"/>
+              <widget class="QSpinBox" name="ldgmMaxLoss"/>
              </item>
              <item>
               <layout class="QVBoxLayout" name="verticalLayout">
                <item>
-                <widget class="QRadioButton" name="radioButton_7">
+                <widget class="QRadioButton" name="ldgmSimpCpuRadio">
                  <property name="text">
                   <string>CPU</string>
                  </property>
                 </widget>
                </item>
                <item>
-                <widget class="QRadioButton" name="radioButton_8">
+                <widget class="QRadioButton" name="ldgmSimpGpuRadio">
                  <property name="text">
                   <string>GPU</string>
                  </property>
@@ -470,7 +469,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QSpinBox" name="spinBox_3"/>
+              <widget class="QSpinBox" name="ldgmK"/>
              </item>
              <item>
               <widget class="QLabel" name="label_11">
@@ -480,7 +479,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QSpinBox" name="spinBox_4"/>
+              <widget class="QSpinBox" name="ldgmM"/>
              </item>
              <item>
               <widget class="QLabel" name="label_12">
@@ -490,7 +489,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QSpinBox" name="spinBox_5"/>
+              <widget class="QSpinBox" name="ldgmC"/>
              </item>
              <item>
               <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -498,14 +497,14 @@
                 <number>5</number>
                </property>
                <item>
-                <widget class="QRadioButton" name="radioButton_5">
+                <widget class="QRadioButton" name="ldgmAdvCpuRadio">
                  <property name="text">
                   <string>CPU</string>
                  </property>
                 </widget>
                </item>
                <item>
-                <widget class="QRadioButton" name="radioButton_6">
+                <widget class="QRadioButton" name="ldgmAdvGpuRadio">
                  <property name="text">
                   <string>GPU</string>
                  </property>
@@ -531,7 +530,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QSpinBox" name="spinBox_6"/>
+              <widget class="QSpinBox" name="rsK"/>
              </item>
              <item>
               <widget class="QLabel" name="label_14">
@@ -547,7 +546,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QSpinBox" name="spinBox_7"/>
+              <widget class="QSpinBox" name="rsN"/>
              </item>
             </layout>
            </widget>
@@ -640,6 +639,7 @@
     <addaction name="actionShow_Tterminal"/>
     <addaction name="separator"/>
     <addaction name="actionRefresh"/>
+    <addaction name="actionAdvanced"/>
    </widget>
    <widget class="QMenu" name="menu_Help">
     <property name="title">
@@ -676,6 +676,14 @@
   <action name="actionRefresh">
    <property name="text">
     <string>Refresh</string>
+   </property>
+  </action>
+  <action name="actionAdvanced">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Advanced</string>
    </property>
   </action>
  </widget>

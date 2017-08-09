@@ -32,7 +32,7 @@ UltragridWindow::UltragridWindow(QWidget *parent): QMainWindow(parent){
 	connect(ui.arguments, SIGNAL(textChanged(const QString &)), this, SLOT(editArgs(const QString &)));
 	connect(ui.editCheckBox, SIGNAL(toggled(bool)), this, SLOT(setArgs()));
 	connect(ui.actionRefresh, SIGNAL(triggered()), this, SLOT(queryOpts()));
-	//connect(ui.networkAdvancedCheckBox, SIGNAL(toggled(bool)), this, SLOT(setAdvanced(bool)));
+	connect(ui.actionAdvanced, SIGNAL(toggled(bool)), this, SLOT(setAdvanced(bool)));
 
 	opts.emplace_back(new SourceOption(ui.videoSourceComboBox,
 				ui.videoModeComboBox,
@@ -57,6 +57,12 @@ UltragridWindow::UltragridWindow(QWidget *parent): QMainWindow(parent){
 	opts.emplace_back(new GenericOption(ui.audioCompressionComboBox,
 				ultragridExecutable,
 				QString("--audio-codec")));
+
+	opts.emplace_back(new FecOption(&ui));
+
+	for(auto &opt : opts){
+		connect(opt.get(), SIGNAL(changed()), this, SLOT(setArgs()));
+	}
 
 	queryOpts();
 }

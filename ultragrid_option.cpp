@@ -220,3 +220,77 @@ void UltragridOption::resetComboBox(QComboBox *box){
 	box->clear();
 	box->addItem(QString("none"));
 }
+
+FecOption::FecOption(Ui::UltragridWindow *ui) : 
+	UltragridOption("", "-f"),
+	ui(ui)
+{
+	connect(ui->fecNoneRadio, SIGNAL(toggled(bool)), this, SLOT(update()));
+	connect(ui->fecMultRadio, SIGNAL(toggled(bool)), this, SLOT(update()));
+	connect(ui->fecLdgmRadio, SIGNAL(toggled(bool)), this, SLOT(update()));
+	connect(ui->fecRsRadio, SIGNAL(toggled(bool)), this, SLOT(update()));
+
+	connect(ui->multSpin, SIGNAL(valueChanged(int)), this, SIGNAL(changed()));
+	connect(ui->ldgmMaxLoss, SIGNAL(valueChanged(int)), this, SIGNAL(changed()));
+	connect(ui->ldgmC, SIGNAL(valueChanged(int)), this, SIGNAL(changed()));
+	connect(ui->ldgmK, SIGNAL(valueChanged(int)), this, SIGNAL(changed()));
+	connect(ui->ldgmM, SIGNAL(valueChanged(int)), this, SIGNAL(changed()));
+	connect(ui->rsK, SIGNAL(valueChanged(int)), this, SIGNAL(changed()));
+	connect(ui->rsN, SIGNAL(valueChanged(int)), this, SIGNAL(changed()));
+
+	connect(ui->ldgmSimpCpuRadio, SIGNAL(toggled(bool)), this, SIGNAL(changed()));
+	connect(ui->ldgmSimpGpuRadio, SIGNAL(toggled(bool)), this, SIGNAL(changed()));
+	connect(ui->ldgmAdvCpuRadio, SIGNAL(toggled(bool)), this, SIGNAL(changed()));
+	connect(ui->ldgmAdvGpuRadio, SIGNAL(toggled(bool)), this, SIGNAL(changed()));
+}
+
+QString FecOption::getLaunchParam(){
+	QString param = "";
+
+	if(!ui->fecNoneRadio->isChecked()){
+		param += opt;
+
+		if(ui->fecMultRadio->isChecked()){
+			param += " mult:" + ui->multSpin->cleanText();
+		} else if(ui->fecLdgmRadio->isChecked()){
+			if(advanced){
+				param += " ldgm:" + ui->ldgmK->cleanText() + ":";
+				param += ui->ldgmM->cleanText() + ":";
+				param += ui->ldgmC->cleanText();
+				if(ui->ldgmAdvCpuRadio->isChecked()){
+					param += " --param ldgm-device=CPU";
+				} else if(ui->ldgmAdvGpuRadio->isChecked()){
+					param += " --param ldgm-device=GPU";
+				}
+			} else {
+				param += " ldgm:" + ui->ldgmMaxLoss->cleanText() + "%";
+				if(ui->ldgmSimpCpuRadio->isChecked()){
+					param += " --param ldgm-device=CPU";
+				} else if(ui->ldgmSimpGpuRadio->isChecked()){
+					param += " --param ldgm-device=GPU";
+				}
+			}
+		} else if(ui->fecRsRadio->isChecked()){
+			param += " rs:" + ui->rsK->cleanText();
+			param += ":" + ui->rsN->cleanText();
+		}
+		param += " ";
+	}
+
+	return param;
+}
+
+void FecOption::update(){
+	if(ui->fecMultRadio->isChecked()){
+		ui->stackedWidget->setCurrentIndex(0);
+	} else if(ui->fecLdgmRadio->isChecked()){
+		if(advanced)
+			ui->stackedWidget->setCurrentIndex(2);
+		else
+			ui->stackedWidget->setCurrentIndex(1);
+	} else if(ui->fecRsRadio->isChecked()){
+		ui->stackedWidget->setCurrentIndex(3);
+	}
+
+	emit changed();
+}

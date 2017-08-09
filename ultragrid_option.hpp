@@ -3,18 +3,25 @@
 
 #include <QString>
 #include <QObject>
+#include "ui_ultragrid_window.h"
 
 class QComboBox;
 class QLineEdit;
 class QLabel;
 
+class UltragridWindow;
+
 class UltragridOption : public QObject{
+	Q_OBJECT
 public:
 	virtual QString getLaunchParam() = 0;
 	virtual void queryAvailOpts() = 0;
 
 	void setExecutable(const QString &executable) { ultragridExecutable = executable; }
-	void setAdvanced(bool advanced) { this->advanced = advanced; }
+	virtual void setAdvanced(bool advanced) { this->advanced = advanced; }
+
+signals:
+	void changed();
 
 protected:
 	UltragridOption(const QString& ultragridExecutable,
@@ -101,6 +108,26 @@ public:
 	void queryAvailOpts() override;
 private:
 	QComboBox *box;
+};
+
+class FecOption : public UltragridOption{
+	Q_OBJECT
+public:
+	FecOption(Ui::UltragridWindow *ui);
+
+	QString getLaunchParam() override;
+	void queryAvailOpts() override {  }
+
+	void setAdvanced(bool advanced) override {
+		this->advanced = advanced;
+		update();
+	}
+
+private:
+	Ui::UltragridWindow *ui;
+
+private slots:
+	void update();
 };
 
 #endif
