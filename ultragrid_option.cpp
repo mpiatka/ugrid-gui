@@ -41,23 +41,23 @@ QStringList UltragridOption::getAvailOpts(const QString &executable,
 
 const QStringList SourceOption::whiteList = {"testcard", "screen"};
 
-SourceOption::SourceOption(QComboBox *src,
-		QComboBox *mode,
+SourceOption::SourceOption(Ui::UltragridWindow *ui,
 		const QString& ultragridExecutable) :
 	UltragridOption(ultragridExecutable, QString("-t")),
-	src(src),
-	mode(mode)
+	ui(ui)
 {
-	connect(src, SIGNAL(currentIndexChanged(int)), this, SLOT(srcChanged()));
+	connect(ui->videoSourceComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(srcChanged()));
+	connect(ui->videoModeComboBox, SIGNAL(currentIndexChanged(int)), this, SIGNAL(changed()));
 }
 
 QString SourceOption::getLaunchParam(){
+	QComboBox *src = ui->videoSourceComboBox;
 	QString param;
 
 	if(src->currentText() != "none"){
 		param += "-t ";
-		param += src->currentData().toString();
-		param += mode->currentData().toString();
+		param += ui->videoSourceComboBox->currentData().toString();
+		param += ui->videoModeComboBox->currentData().toString();
 		param += " ";
 	}
 
@@ -65,6 +65,7 @@ QString SourceOption::getLaunchParam(){
 }
 
 void SourceOption::queryAvailOpts(){
+	QComboBox *src = ui->videoSourceComboBox;
 	resetComboBox(src);
 	QStringList opts = getAvailOpts(ultragridExecutable, QString("-t help"));
 
@@ -85,6 +86,9 @@ void SourceOption::queryAvailOpts(){
 }
 
 void SourceOption::srcChanged(){
+	QComboBox *src = ui->videoSourceComboBox;
+	QComboBox *mode = ui->videoModeComboBox;
+
 	mode->clear();
 	mode->addItem(QString("Default"), QVariant(QString("")));
 
@@ -103,19 +107,22 @@ void SourceOption::srcChanged(){
 		mode->addItem(QString("30 fps"), QVariant(QString(":fps=30")));
 		mode->addItem(QString("24 fps"), QVariant(QString(":fps=24")));
 	}
+
+	emit changed();
 }
 
 const QStringList DisplayOption::whiteList = {"gl", "sdl"};
 
-DisplayOption::DisplayOption(QComboBox *disp,
+DisplayOption::DisplayOption(Ui::UltragridWindow *ui,
 		const QString& ultragridExecutable):
 	UltragridOption(ultragridExecutable, QString("-d")),
-	disp(disp)
+	ui(ui)
 {
-
+	connect(ui->videoDisplayComboBox, SIGNAL(currentIndexChanged(int)), this, SIGNAL(changed()));
 }
 
 QString DisplayOption::getLaunchParam(){
+	QComboBox *disp = ui->videoDisplayComboBox;
 	QString param;
 
 	if(disp->currentText() != "none"){
@@ -128,6 +135,7 @@ QString DisplayOption::getLaunchParam(){
 }
 
 void DisplayOption::queryAvailOpts(){
+	QComboBox *disp = ui->videoDisplayComboBox;
 	resetComboBox(disp);
 	QStringList opts = getAvailOpts(ultragridExecutable, QString("-d help"));
 
@@ -138,19 +146,19 @@ void DisplayOption::queryAvailOpts(){
 	}
 }
 
-CompressOption::CompressOption(QComboBox *compress,
-		QLineEdit *bitrate,
-		QLabel *label,
+CompressOption::CompressOption(Ui::UltragridWindow *ui,
 		const QString& ultragridExecutable) :
 	UltragridOption(ultragridExecutable, QString("-c")),
-	comp(compress),
-	bitrate(bitrate),
-	label(label)
+	ui(ui)
 {
-	connect(comp, SIGNAL(currentIndexChanged(int)), this, SLOT(compChanged()));
+	connect(ui->videoCompressionComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(compChanged()));
+	connect(ui->videoBitrateEdit, SIGNAL(textChanged(const QString&)), this, SIGNAL(changed()));
+	connect(ui->videoCompressionComboBox, SIGNAL(currentIndexChanged(int)), this, SIGNAL(changed()));
 }
 
 QString CompressOption::getLaunchParam(){
+	QComboBox *comp = ui->videoCompressionComboBox;
+	QLineEdit *bitrate = ui->videoBitrateEdit;
 	QString param;
 
 	if(comp->currentText() != "none"){
@@ -170,6 +178,8 @@ QString CompressOption::getLaunchParam(){
 }
 
 void CompressOption::queryAvailOpts(){
+	QComboBox *comp = ui->videoCompressionComboBox;
+
 	resetComboBox(comp);
 
 	comp->addItem(QString("H.264"), QVariant(QString("libavcodec:codec=H.264")));
@@ -180,6 +190,9 @@ void CompressOption::queryAvailOpts(){
 }
 
 void CompressOption::compChanged(){
+	QComboBox *comp = ui->videoCompressionComboBox;
+	QLabel *label = ui->videoBitrateLabel;
+
 	if(comp->currentText() == "JPEG"){
 		label->setText(QString("Jpeg quality"));
 	} else {
@@ -193,7 +206,7 @@ GenericOption::GenericOption(QComboBox *box,
 	UltragridOption(ultragridExecutable, opt),
 	box(box)
 {
-
+	connect(box, SIGNAL(currentIndexChanged(int)), this, SIGNAL(changed()));
 }
 
 QString GenericOption::getLaunchParam(){

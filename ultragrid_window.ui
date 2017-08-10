@@ -637,9 +637,9 @@
      <string>&amp;Tools</string>
     </property>
     <addaction name="actionShow_Tterminal"/>
+    <addaction name="actionAdvanced"/>
     <addaction name="separator"/>
     <addaction name="actionRefresh"/>
-    <addaction name="actionAdvanced"/>
    </widget>
    <widget class="QMenu" name="menu_Help">
     <property name="title">

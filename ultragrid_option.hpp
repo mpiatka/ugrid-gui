@@ -47,19 +47,14 @@ class SourceOption : public UltragridOption{
 	Q_OBJECT
 public:
 
-	SourceOption(QComboBox *src,
-			QComboBox *mode,
+	SourceOption(Ui::UltragridWindow *ui,
 			const QString& ultragridExecutable);
-
-	void setSrcBox(QComboBox *src) { this->src = src; }
-	void setModeBox(QComboBox *mode) { this->mode = mode; }
 
 	QString getLaunchParam() override;
 	void queryAvailOpts() override;
-private:
-	QComboBox *src;
-	QComboBox *mode;
 
+private:
+	Ui::UltragridWindow *ui;
 	const static QStringList whiteList;
 
 private slots:
@@ -68,13 +63,13 @@ private slots:
 
 class DisplayOption : public UltragridOption{
 public:
-	DisplayOption(QComboBox *disp,
+	DisplayOption(Ui::UltragridWindow *ui,
 			const QString& ultragridExecutable);
 
 	QString getLaunchParam() override;
 	void queryAvailOpts() override;
 private:
-	QComboBox *disp;
+	Ui::UltragridWindow *ui;
 
 	const static QStringList whiteList;
 };
@@ -82,17 +77,13 @@ private:
 class CompressOption : public UltragridOption{
 	Q_OBJECT
 public:
-	CompressOption(QComboBox *compress,
-			QLineEdit *bitrate,
-			QLabel *label,
+	CompressOption(Ui::UltragridWindow *ui,
 			const QString& ultragridExecutable);
 
 	QString getLaunchParam() override;
 	void queryAvailOpts() override;
 private:
-	QComboBox *comp;
-	QLineEdit *bitrate;
-	QLabel *label;
+	Ui::UltragridWindow *ui;
 
 private slots:
 	void compChanged();
