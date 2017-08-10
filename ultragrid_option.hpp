@@ -35,6 +35,9 @@ protected:
 
 	void resetComboBox(QComboBox *box);
 
+	void setItem(QComboBox *box, const QVariant &data);
+	void setItem(QComboBox *box, const QString &data);
+
 	QString ultragridExecutable;
 	QString opt;
 	bool advanced;

@@ -39,6 +39,24 @@ QStringList UltragridOption::getAvailOpts(const QString &executable,
 	return out;
 }
 
+
+void UltragridOption::setItem(QComboBox *box, const QVariant &data){
+	if(!data.isValid())
+		return;
+
+	int idx = box->findData(data);
+
+	if(idx != -1)
+		box->setCurrentIndex(idx);
+}
+
+void UltragridOption::setItem(QComboBox *box, const QString &text){
+	int idx = box->findText(text);
+
+	if(idx != -1)
+		box->setCurrentIndex(idx);
+}
+
 const QStringList SourceOption::whiteList = {"testcard", "screen"};
 
 SourceOption::SourceOption(Ui::UltragridWindow *ui,
@@ -66,6 +84,9 @@ QString SourceOption::getLaunchParam(){
 
 void SourceOption::queryAvailOpts(){
 	QComboBox *src = ui->videoSourceComboBox;
+
+	QVariant prevData = src->currentData();
+
 	resetComboBox(src);
 	QStringList opts = getAvailOpts(ultragridExecutable, QString("-t help"));
 
@@ -83,6 +104,8 @@ void SourceOption::queryAvailOpts(){
 			src->addItem(name, QVariant(opt));
 		}
 	}
+
+	setItem(src, prevData);
 }
 
 void SourceOption::srcChanged(){
@@ -136,6 +159,9 @@ QString DisplayOption::getLaunchParam(){
 
 void DisplayOption::queryAvailOpts(){
 	QComboBox *disp = ui->videoDisplayComboBox;
+
+	QString prevText = disp->currentText();
+
 	resetComboBox(disp);
 	QStringList opts = getAvailOpts(ultragridExecutable, QString("-d help"));
 
@@ -144,6 +170,8 @@ void DisplayOption::queryAvailOpts(){
 			disp->addItem(i);
 		}
 	}
+
+	setItem(disp, prevText);
 }
 
 CompressOption::CompressOption(Ui::UltragridWindow *ui,
@@ -179,6 +207,8 @@ QString CompressOption::getLaunchParam(){
 
 void CompressOption::queryAvailOpts(){
 	QComboBox *comp = ui->videoCompressionComboBox;
+	
+	QVariant prevData = comp->currentData();
 
 	resetComboBox(comp);
 
@@ -187,6 +217,8 @@ void CompressOption::queryAvailOpts(){
 	comp->addItem(QString("MJPEG"), QVariant(QString("libavcodec:codec=MJPEG")));
 	comp->addItem(QString("VP8"), QVariant(QString("libavcodec:codec=VP8")));
 	comp->addItem(QString("JPEG"), QVariant(QString("jpeg")));
+
+	setItem(comp, prevData);
 }
 
 void CompressOption::compChanged(){
@@ -223,10 +255,13 @@ QString GenericOption::getLaunchParam(){
 }
 
 void GenericOption::queryAvailOpts(){
+	QString prevText = box->currentText();
 	resetComboBox(box);
 	QString helpCommand = opt + " help";
 	QStringList opts = getAvailOpts(ultragridExecutable, helpCommand);
 	box->addItems(opts);
+
+	setItem(box, prevText);
 }
 
 void UltragridOption::resetComboBox(QComboBox *box){
