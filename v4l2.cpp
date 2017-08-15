@@ -28,6 +28,8 @@ std::vector<Camera> getCameras(){
 		c.path = path;
 
 		result.push_back(c);
+
+		close(fd);
 	}
 
 	return result;
