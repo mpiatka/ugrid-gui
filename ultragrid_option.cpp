@@ -129,6 +129,34 @@ void SourceOption::srcChanged(){
 		mode->addItem(QString("60 fps"), QVariant(QString(":fps=60")));
 		mode->addItem(QString("30 fps"), QVariant(QString(":fps=30")));
 		mode->addItem(QString("24 fps"), QVariant(QString(":fps=24")));
+	} else if(src->currentData().toString().contains("v4l2")){
+		std::string path = src->currentData().toString().split("device=")[1].toStdString();
+		std::vector<Mode> modes = getModes(path);
+
+		for(const Mode& m : modes){
+			QString name;
+			QString param = ":size=";
+
+			name += QString::number(m.width);
+			name += "x";
+			name += QString::number(m.height);
+			name += ", ";
+
+			float fps = (float) m.tpf_denominator / m.tpf_numerator;
+			name += QString::number(fps);
+			name += " fps";
+
+			param += QString::number(m.width);
+			param += "x";
+			param += QString::number(m.height);
+
+			param += ":tpf=";
+			param += QString::number(m.tpf_numerator);
+			param += "/";
+			param += QString::number(m.tpf_denominator);
+
+			mode->addItem(name, param);
+		}
 	}
 
 	emit changed();
