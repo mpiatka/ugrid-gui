@@ -142,6 +142,9 @@ void SourceOption::srcChanged(){
 			name += QString::number(m.height);
 			name += ", ";
 
+			name += QString::fromStdString(m.codec);
+			name += ", ";
+
 			float fps = (float) m.tpf_denominator / m.tpf_numerator;
 			name += QString::number(fps);
 			name += " fps";
@@ -149,6 +152,9 @@ void SourceOption::srcChanged(){
 			param += QString::number(m.width);
 			param += "x";
 			param += QString::number(m.height);
+
+			param += ":codec=";
+			param += QString::fromStdString(m.codec);
 
 			param += ":tpf=";
 			param += QString::number(m.tpf_numerator);

@@ -99,6 +99,7 @@ std::vector<Mode> getModes(const std::string& path){
 				size.index++;
 			}
 		}
+		fmt.index++;
 	}
 
 	close(fd);
