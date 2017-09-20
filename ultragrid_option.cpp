@@ -57,7 +57,7 @@ void UltragridOption::setItem(QComboBox *box, const QString &text){
 		box->setCurrentIndex(idx);
 }
 
-const QStringList SourceOption::whiteList = {"testcard", "screen"};
+const QStringList SourceOption::whiteList = {"testcard", "screen", "decklink", "aja"};
 
 SourceOption::SourceOption(Ui::UltragridWindow *ui,
 		const QString& ultragridExecutable) :
@@ -168,7 +168,7 @@ void SourceOption::srcChanged(){
 	emit changed();
 }
 
-const QStringList DisplayOption::whiteList = {"gl", "sdl"};
+const QStringList DisplayOption::whiteList = {"gl", "sdl", "decklink", "aja"};
 
 DisplayOption::DisplayOption(Ui::UltragridWindow *ui,
 		const QString& ultragridExecutable):
