@@ -208,7 +208,7 @@ void DisplayOption::queryAvailOpts(){
 	setItem(disp, prevText);
 }
 
-CompressOption::CompressOption(Ui::UltragridWindow *ui,
+VideoCompressOption::VideoCompressOption(Ui::UltragridWindow *ui,
 		const QString& ultragridExecutable) :
 	UltragridOption(ultragridExecutable, QString("-c")),
 	ui(ui)
@@ -218,7 +218,7 @@ CompressOption::CompressOption(Ui::UltragridWindow *ui,
 	connect(ui->videoCompressionComboBox, SIGNAL(currentIndexChanged(int)), this, SIGNAL(changed()));
 }
 
-QString CompressOption::getLaunchParam(){
+QString VideoCompressOption::getLaunchParam(){
 	QComboBox *comp = ui->videoCompressionComboBox;
 	QLineEdit *bitrate = ui->videoBitrateEdit;
 	QString param;
@@ -239,7 +239,7 @@ QString CompressOption::getLaunchParam(){
 	return param;
 }
 
-void CompressOption::queryAvailOpts(){
+void VideoCompressOption::queryAvailOpts(){
 	QComboBox *comp = ui->videoCompressionComboBox;
 	
 	QVariant prevData = comp->currentData();
@@ -255,15 +255,58 @@ void CompressOption::queryAvailOpts(){
 	setItem(comp, prevData);
 }
 
-void CompressOption::compChanged(){
-	QComboBox *comp = ui->videoCompressionComboBox;
-	QLabel *label = ui->videoBitrateLabel;
+void VideoCompressOption::compChanged(){
+	QComboBox *comp = ui->audioCompressionComboBox;
+	QLabel *label = ui->audioBitrateLabel;
 
 	if(comp->currentText() == "JPEG"){
 		label->setText(QString("Jpeg quality"));
 	} else {
 		label->setText(QString("Bitrate"));
 	}
+}
+
+AudioCompressOption::AudioCompressOption(Ui::UltragridWindow *ui,
+		const QString& ultragridExecutable) :
+	UltragridOption(ultragridExecutable, QString("--audio-codec")),
+	ui(ui)
+{
+	connect(ui->audioCompressionComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(compChanged()));
+	connect(ui->audioBitrateEdit, SIGNAL(textChanged(const QString&)), this, SIGNAL(changed()));
+	connect(ui->audioCompressionComboBox, SIGNAL(currentIndexChanged(int)), this, SIGNAL(changed()));
+}
+
+QString AudioCompressOption::getLaunchParam(){
+	QComboBox *comp = ui->audioCompressionComboBox;
+	QLineEdit *bitrate = ui->audioBitrateEdit;
+	QString param;
+
+	if(comp->currentText() != "none"){
+		param += opt + " ";
+		param += comp->currentText();
+		if(!bitrate->text().isEmpty()){
+			param += ":bitrate=" + bitrate->text();
+		}
+		param += " ";
+	}
+
+	return param;
+}
+
+void AudioCompressOption::queryAvailOpts(){
+	QComboBox *box = ui->audioCompressionComboBox;
+
+	QString prevText = box->currentText();
+	resetComboBox(box);
+	QString helpCommand = opt + " help";
+	QStringList opts = getAvailOpts(ultragridExecutable, helpCommand);
+	box->addItems(opts);
+
+	setItem(box, prevText);
+}
+
+void AudioCompressOption::compChanged(){
+
 }
 
 GenericOption::GenericOption(QComboBox *box,

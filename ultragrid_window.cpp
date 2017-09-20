@@ -32,7 +32,7 @@ UltragridWindow::UltragridWindow(QWidget *parent): QMainWindow(parent){
 	opts.emplace_back(new DisplayOption(&ui,
 				ultragridExecutable));
 
-	opts.emplace_back(new CompressOption(&ui,
+	opts.emplace_back(new VideoCompressOption(&ui,
 				ultragridExecutable));
 
 	opts.emplace_back(new GenericOption(ui.audioSourceComboBox,
@@ -43,9 +43,8 @@ UltragridWindow::UltragridWindow(QWidget *parent): QMainWindow(parent){
 				ultragridExecutable,
 				QString("-r")));
 
-	opts.emplace_back(new GenericOption(ui.audioCompressionComboBox,
-				ultragridExecutable,
-				QString("--audio-codec")));
+	opts.emplace_back(new AudioCompressOption(&ui,
+				ultragridExecutable));
 
 	opts.emplace_back(new FecOption(&ui));
 

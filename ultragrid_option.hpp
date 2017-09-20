@@ -77,10 +77,25 @@ private:
 	const static QStringList whiteList;
 };
 
-class CompressOption : public UltragridOption{
+class VideoCompressOption : public UltragridOption{
 	Q_OBJECT
 public:
-	CompressOption(Ui::UltragridWindow *ui,
+	VideoCompressOption(Ui::UltragridWindow *ui,
+			const QString& ultragridExecutable);
+
+	QString getLaunchParam() override;
+	void queryAvailOpts() override;
+private:
+	Ui::UltragridWindow *ui;
+
+private slots:
+	void compChanged();
+};
+
+class AudioCompressOption : public UltragridOption{
+	Q_OBJECT
+public:
+	AudioCompressOption(Ui::UltragridWindow *ui,
 			const QString& ultragridExecutable);
 
 	QString getLaunchParam() override;
