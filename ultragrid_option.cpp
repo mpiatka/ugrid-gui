@@ -266,6 +266,44 @@ void VideoCompressOption::compChanged(){
 	}
 }
 
+AudioSourceOption::AudioSourceOption(Ui::UltragridWindow *ui,
+		const QString& ultragridExecutable) :
+	UltragridOption(ultragridExecutable, QString("-s")),
+	ui(ui)
+{
+	connect(ui->audioSourceComboBox, SIGNAL(currentIndexChanged(int)), this, SIGNAL(changed()));
+	connect(ui->audioChannelsSpinBox, SIGNAL(valueChanged(const QString&)), this, SIGNAL(changed()));
+}
+
+QString AudioSourceOption::getLaunchParam(){
+	QComboBox *src = ui->audioSourceComboBox;
+	QSpinBox *channels = ui->audioChannelsSpinBox;
+	QString param;
+
+	if(src->currentText() != "none"){
+		param += opt + " ";
+		param += src->currentText();
+		if(channels->value() != 1){
+			param += " --audio-capture-format channels=" + QString::number(channels->value());
+		}
+		param += " ";
+	}
+
+	return param;
+}
+
+void AudioSourceOption::queryAvailOpts(){
+	QComboBox *box = ui->audioSourceComboBox;
+
+	QString prevText = box->currentText();
+	resetComboBox(box);
+	QString helpCommand = opt + " help";
+	QStringList opts = getAvailOpts(ultragridExecutable, helpCommand);
+	box->addItems(opts);
+
+	setItem(box, prevText);
+}
+
 AudioCompressOption::AudioCompressOption(Ui::UltragridWindow *ui,
 		const QString& ultragridExecutable) :
 	UltragridOption(ultragridExecutable, QString("--audio-codec")),

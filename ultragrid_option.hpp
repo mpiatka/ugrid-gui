@@ -92,6 +92,18 @@ private slots:
 	void compChanged();
 };
 
+class AudioSourceOption : public UltragridOption{
+	Q_OBJECT
+public:
+	AudioSourceOption(Ui::UltragridWindow *ui,
+			const QString& ultragridExecutable);
+
+	QString getLaunchParam() override;
+	void queryAvailOpts() override;
+private:
+	Ui::UltragridWindow *ui;
+};
+
 class AudioCompressOption : public UltragridOption{
 	Q_OBJECT
 public:
