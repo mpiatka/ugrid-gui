@@ -24,11 +24,7 @@
        <enum>QLayout::SetDefaultConstraint</enum>
       </property>
       <item>
-       <widget class="QWidget" name="widget_2" native="true">
-        <property name="autoFillBackground">
-         <bool>false</bool>
-        </property>
-       </widget>
+       <widget class="PreviewWidget" name="openGLWidget"/>
       </item>
       <item>
        <widget class="QTextBrowser" name="terminal">
@@ -633,7 +629,7 @@
      <x>0</x>
      <y>0</y>
      <width>1097</width>
-     <height>27</height>
+     <height>22</height>
     </rect>
    </property>
    <property name="contextMenuPolicy">
@@ -700,6 +696,13 @@
    </property>
   </action>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>PreviewWidget</class>
+   <extends>QOpenGLWidget</extends>
+   <header>previewWidget.hpp</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections>
   <connection>
