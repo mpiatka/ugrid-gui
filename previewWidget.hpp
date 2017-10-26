@@ -20,6 +20,8 @@ private:
 	GLuint program;
 
 	GLfloat scaleVec[2];
+	int vidW, vidH;
+	int width, height;
 };
 
 #endif

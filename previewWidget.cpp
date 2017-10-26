@@ -73,9 +73,27 @@ void PreviewWidget::initializeGL(){
 
 	scaleVec[0] = 0.75f;
 	scaleVec[1] = 0.5;
+
+	vidW = 1280;
+	vidH = 720;
 }
 
 void PreviewWidget::resizeGL(int w, int h){
+	width = w;
+	height = h;
+
+	double videoAspect = (double) vidW / vidH;
+	double widgetAspect = (double) w / h;
+
+	if(videoAspect > widgetAspect){
+		float scale = widgetAspect / videoAspect;
+		scaleVec[0] = 1;
+		scaleVec[1] = scale;
+	} else {
+		float scale = videoAspect / widgetAspect;
+		scaleVec[0] = scale;
+		scaleVec[1] = 1;
+	}
 
 }
 
