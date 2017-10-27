@@ -3,10 +3,15 @@
 
 #include <QOpenGLWidget>
 #include <QOpenGLFunctions>
+#include <QSharedMemory>
+#include <QTimer>
 
 class PreviewWidget : public QOpenGLWidget{
 public:
-	PreviewWidget(QWidget *parent) : QOpenGLWidget(parent) {  }
+	PreviewWidget(QWidget *parent) : QOpenGLWidget(parent) {
+		connect(&timer, SIGNAL(timeout()), this, SLOT(update()));
+		timer.start(50);
+  	}
 
 protected:
 	void initializeGL();
@@ -18,10 +23,17 @@ private:
 	GLuint vertexShader;
 	GLuint fragShader;
 	GLuint program;
+	GLuint texture;
 
 	GLfloat scaleVec[2];
 	int vidW, vidH;
 	int width, height;
+
+	void setVidSize(int w, int h);
+	void calculateScale();
+
+	QSharedMemory shared_mem;
+	QTimer timer;
 };
 
 #endif

@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include "previewWidget.hpp"
+#include "shared_mem_frame.hpp"
 
 static const GLfloat rectangle[] = {
 	 1.0f,  1.0f,  1.0f,  1.0f,
@@ -14,19 +15,25 @@ static const GLfloat rectangle[] = {
 static const char *vert_src = R"END(
 #version 330 core
 layout(location = 0) in vec2 vert_pos;
+layout(location = 1) in vec2 vert_uv;
+
+out vec2 UV;
 
 uniform vec2 scale_vec;
 
 void main(){
 	gl_Position = vec4(vert_pos * scale_vec, 0.0f, 1.0f);
+	UV = vert_uv;
 }
 )END";
 
 static const char *frag_src = R"END(
 #version 330 core
+in vec2 UV;
 out vec3 color;
+uniform sampler2D tex;
 void main(){
-	color = vec3(0, 1, 0);
+	color = texture(tex, UV).rgb;
 }
 )END";
 
@@ -44,6 +51,14 @@ static void compileShader(GLuint shaderId, QOpenGLFunctions *f){
 		printf("%s\n", &errorMsg[0]);
 	}
 }
+
+
+static unsigned char pixels[] = {
+	255, 0, 0,   0, 0, 255,   0, 255, 0,   255, 255, 255,
+	255, 0, 0,   0, 0, 255,   0, 255, 0,   255, 255, 255,
+	255, 0, 0,   0, 0, 255,   0, 255, 0,   255, 255, 255,
+	255, 0, 0,   0, 0, 255,   0, 255, 0,   255, 255, 255
+};
 
 void PreviewWidget::initializeGL(){
 	QOpenGLFunctions *f = QOpenGLContext::currentContext()->functions();
@@ -71,19 +86,25 @@ void PreviewWidget::initializeGL(){
 	f->glDeleteShader(vertexShader);
 	f->glDeleteShader(fragShader);
 
+	f->glGenTextures(1, &texture);
+	f->glBindTexture(GL_TEXTURE_2D, texture);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 4, 4, 0, GL_RGB, GL_UNSIGNED_BYTE, pixels);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
 	scaleVec[0] = 0.75f;
 	scaleVec[1] = 0.5;
 
 	vidW = 1280;
 	vidH = 720;
+
+	shared_mem.setKey("ultragrid_preview");
+
 }
 
-void PreviewWidget::resizeGL(int w, int h){
-	width = w;
-	height = h;
-
+void PreviewWidget::calculateScale(){
 	double videoAspect = (double) vidW / vidH;
-	double widgetAspect = (double) w / h;
+	double widgetAspect = (double) width / height;
 
 	if(videoAspect > widgetAspect){
 		float scale = widgetAspect / videoAspect;
@@ -94,7 +115,22 @@ void PreviewWidget::resizeGL(int w, int h){
 		scaleVec[0] = scale;
 		scaleVec[1] = 1;
 	}
+}
 
+void PreviewWidget::resizeGL(int w, int h){
+	width = w;
+	height = h;
+
+	calculateScale();
+}
+
+void PreviewWidget::setVidSize(int w, int h){
+	if(vidW == w && vidH == h)
+		return;
+
+	vidW = w;
+	vidH = h;
+	calculateScale();
 }
 
 void PreviewWidget::paintGL(){
@@ -107,16 +143,36 @@ void PreviewWidget::paintGL(){
 	f->glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
 	f->glVertexAttribPointer(
 			0,
-			3,
+			2,
 			GL_FLOAT,
 			GL_FALSE,
 			4 * sizeof(float),
 			(void*)0
 			);
+	f->glEnableVertexAttribArray(1);
+	f->glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+	f->glVertexAttribPointer(
+			1,
+			2,
+			GL_FLOAT,
+			GL_FALSE,
+			4 * sizeof(float),
+			(void*)(2 * sizeof(float))
+			);
 
 	GLuint loc;
 	loc = f->glGetUniformLocation(program, "scale_vec");
 	f->glUniform2fv(loc, 1, scaleVec);
+
+	f->glBindTexture(GL_TEXTURE_2D, texture);
+	if(shared_mem.attach()){
+		struct Shared_mem_frame *sframe = (Shared_mem_frame*) shared_mem.data();
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, sframe->width, sframe->height, 0, GL_RGB, GL_UNSIGNED_BYTE, sframe->pixels);
+		setVidSize(sframe->width, sframe->height);
+		shared_mem.detach();
+	} else {
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 4, 4, 0, GL_RGB, GL_UNSIGNED_BYTE, pixels);
+	}
 
 	f->glDrawArrays(GL_TRIANGLES, 0, 6);
 }
