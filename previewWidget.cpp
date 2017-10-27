@@ -14,19 +14,25 @@ static const GLfloat rectangle[] = {
 static const char *vert_src = R"END(
 #version 330 core
 layout(location = 0) in vec2 vert_pos;
+layout(location = 1) in vec2 vert_uv;
+
+out vec2 UV;
 
 uniform vec2 scale_vec;
 
 void main(){
 	gl_Position = vec4(vert_pos * scale_vec, 0.0f, 1.0f);
+	UV = vert_uv;
 }
 )END";
 
 static const char *frag_src = R"END(
 #version 330 core
+in vec2 UV;
 out vec3 color;
+uniform sampler2D tex;
 void main(){
-	color = vec3(0, 1, 0);
+	color = texture(tex, UV).rgb;
 }
 )END";
 
@@ -71,6 +77,17 @@ void PreviewWidget::initializeGL(){
 	f->glDeleteShader(vertexShader);
 	f->glDeleteShader(fragShader);
 
+	f->glGenTextures(1, &texture);
+	f->glBindTexture(GL_TEXTURE_2D, texture);
+	float pixels[] = {
+		1.0f, 0.0f, 0.0f,   0.0f, 0.0f, 1.0f,
+		0.0f, 1.0f, 0.0f,   0.0f, 0.0f, 0.0f
+
+	};
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 2, 2, 0, GL_RGB, GL_FLOAT, pixels);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
 	scaleVec[0] = 0.75f;
 	scaleVec[1] = 0.5;
 
@@ -107,16 +124,27 @@ void PreviewWidget::paintGL(){
 	f->glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
 	f->glVertexAttribPointer(
 			0,
-			3,
+			2,
 			GL_FLOAT,
 			GL_FALSE,
 			4 * sizeof(float),
 			(void*)0
+			);
+	f->glEnableVertexAttribArray(1);
+	f->glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+	f->glVertexAttribPointer(
+			1,
+			2,
+			GL_FLOAT,
+			GL_FALSE,
+			4 * sizeof(float),
+			(void*)(2 * sizeof(float))
 			);
 
 	GLuint loc;
 	loc = f->glGetUniformLocation(program, "scale_vec");
 	f->glUniform2fv(loc, 1, scaleVec);
 
+	f->glBindTexture(GL_TEXTURE_2D, texture);
 	f->glDrawArrays(GL_TRIANGLES, 0, 6);
 }

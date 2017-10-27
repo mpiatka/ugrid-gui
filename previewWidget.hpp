@@ -18,6 +18,7 @@ private:
 	GLuint vertexShader;
 	GLuint fragShader;
 	GLuint program;
+	GLuint texture;
 
 	GLfloat scaleVec[2];
 	int vidW, vidH;
