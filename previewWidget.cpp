@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include "previewWidget.hpp"
+#include "shared_mem_frame.hpp"
 
 static const GLfloat rectangle[] = {
 	 1.0f,  1.0f,  1.0f,  1.0f,
@@ -51,6 +52,14 @@ static void compileShader(GLuint shaderId, QOpenGLFunctions *f){
 	}
 }
 
+
+static unsigned char pixels[] = {
+	255, 0, 0,   0, 0, 255,   0, 255, 0,   255, 255, 255,
+	255, 0, 0,   0, 0, 255,   0, 255, 0,   255, 255, 255,
+	255, 0, 0,   0, 0, 255,   0, 255, 0,   255, 255, 255,
+	255, 0, 0,   0, 0, 255,   0, 255, 0,   255, 255, 255
+};
+
 void PreviewWidget::initializeGL(){
 	QOpenGLFunctions *f = QOpenGLContext::currentContext()->functions();
 	f->glClearColor(1.0f, 1.0f, 0.0f, 1.0f);
@@ -79,12 +88,7 @@ void PreviewWidget::initializeGL(){
 
 	f->glGenTextures(1, &texture);
 	f->glBindTexture(GL_TEXTURE_2D, texture);
-	float pixels[] = {
-		1.0f, 0.0f, 0.0f,   0.0f, 0.0f, 1.0f,
-		0.0f, 1.0f, 0.0f,   0.0f, 0.0f, 0.0f
-
-	};
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 2, 2, 0, GL_RGB, GL_FLOAT, pixels);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 4, 4, 0, GL_RGB, GL_UNSIGNED_BYTE, pixels);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
@@ -93,14 +97,14 @@ void PreviewWidget::initializeGL(){
 
 	vidW = 1280;
 	vidH = 720;
+
+	shared_mem.setKey("ultragrid_preview");
+
 }
 
-void PreviewWidget::resizeGL(int w, int h){
-	width = w;
-	height = h;
-
+void PreviewWidget::calculateScale(){
 	double videoAspect = (double) vidW / vidH;
-	double widgetAspect = (double) w / h;
+	double widgetAspect = (double) width / height;
 
 	if(videoAspect > widgetAspect){
 		float scale = widgetAspect / videoAspect;
@@ -111,7 +115,22 @@ void PreviewWidget::resizeGL(int w, int h){
 		scaleVec[0] = scale;
 		scaleVec[1] = 1;
 	}
+}
 
+void PreviewWidget::resizeGL(int w, int h){
+	width = w;
+	height = h;
+
+	calculateScale();
+}
+
+void PreviewWidget::setVidSize(int w, int h){
+	if(vidW == w && vidH == h)
+		return;
+
+	vidW = w;
+	vidH = h;
+	calculateScale();
 }
 
 void PreviewWidget::paintGL(){
@@ -146,5 +165,14 @@ void PreviewWidget::paintGL(){
 	f->glUniform2fv(loc, 1, scaleVec);
 
 	f->glBindTexture(GL_TEXTURE_2D, texture);
+	if(shared_mem.attach()){
+		struct Shared_mem_frame *sframe = (Shared_mem_frame*) shared_mem.data();
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, sframe->width, sframe->height, 0, GL_RGB, GL_UNSIGNED_BYTE, sframe->pixels);
+		setVidSize(sframe->width, sframe->height);
+		shared_mem.detach();
+	} else {
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 4, 4, 0, GL_RGB, GL_UNSIGNED_BYTE, pixels);
+	}
+
 	f->glDrawArrays(GL_TRIANGLES, 0, 6);
 }
