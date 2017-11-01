@@ -3,13 +3,13 @@
 #include "shared_mem_frame.hpp"
 
 static const GLfloat rectangle[] = {
-	 1.0f,  1.0f,  1.0f,  1.0f,
-	-1.0f,  1.0f,  0.0f,  1.0f,
-	-1.0f, -1.0f,  0.0f,  0.0f,
+	 1.0f,  1.0f,  1.0f,  0.0f,
+	-1.0f,  1.0f,  0.0f,  0.0f,
+	-1.0f, -1.0f,  0.0f,  1.0f,
 
-	 1.0f,  1.0f,  1.0f,  1.0f,
-	-1.0f, -1.0f,  0.0f,  0.0f,
-	 1.0f, -1.0f,  1.0f,  0.0f
+	 1.0f,  1.0f,  1.0f,  0.0f,
+	-1.0f, -1.0f,  0.0f,  1.0f,
+	 1.0f, -1.0f,  1.0f,  1.0f
 };
 
 static const char *vert_src = R"END(
@@ -166,10 +166,14 @@ void PreviewWidget::paintGL(){
 
 	f->glBindTexture(GL_TEXTURE_2D, texture);
 	if(shared_mem.attach()){
+		shared_mem.lock();
 		struct Shared_mem_frame *sframe = (Shared_mem_frame*) shared_mem.data();
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, sframe->width, sframe->height, 0, GL_RGB, GL_UNSIGNED_BYTE, sframe->pixels);
 		setVidSize(sframe->width, sframe->height);
-		shared_mem.detach();
+		shared_mem.unlock();
+		if(shared_mem.detach() == false){
+			printf("Unable to detach\n");
+		}
 	} else {
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 4, 4, 0, GL_RGB, GL_UNSIGNED_BYTE, pixels);
 	}
