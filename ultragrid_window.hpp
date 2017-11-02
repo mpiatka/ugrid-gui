@@ -7,6 +7,7 @@
 
 #include "ui_ultragrid_window.h"
 #include "ultragrid_option.hpp"
+#include "log_window.hpp"
 
 class UltragridWindow : public QMainWindow{
 	Q_OBJECT
@@ -22,6 +23,7 @@ private:
 
 	QString launchArgs;
 	QStringList getOptionsForParam(QString param);
+	LogWindow log;
 
 	std::vector<std::unique_ptr<UltragridOption>> opts;
 
@@ -33,6 +35,8 @@ public slots:
 
 	void editArgs(const QString &text);
 	void setArgs();
+
+	void showLog();
 
 private slots:
 	void queryOpts();
