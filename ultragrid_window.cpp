@@ -19,6 +19,7 @@ UltragridWindow::UltragridWindow(QWidget *parent): QMainWindow(parent){
 	connect(ui.startButton, SIGNAL(clicked()), this, SLOT(start()));
 	connect(&process, SIGNAL(readyReadStandardOutput()), this, SLOT(outputAvailable()));
 	connect(&process, SIGNAL(readyReadStandardError()), this, SLOT(outputAvailable()));
+	connect(&process, SIGNAL(stateChanged(QProcess::ProcessState)), this, SLOT(setStartBtnText(QProcess::ProcessState)));
 
 	connect(ui.networkDestinationEdit, SIGNAL(textEdited(const QString &)), this, SLOT(setArgs()));
 
@@ -125,4 +126,13 @@ void UltragridWindow::setAdvanced(bool adv){
 
 void UltragridWindow::showLog(){
 	log.show();
+	log.raise();
+}
+
+void UltragridWindow::setStartBtnText(QProcess::ProcessState s){
+	if(s == QProcess::Running){
+		ui.startButton->setText("Stop");
+	} else {
+		ui.startButton->setText("Start");
+	}
 }

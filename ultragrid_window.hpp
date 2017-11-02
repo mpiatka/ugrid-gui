@@ -41,6 +41,7 @@ public slots:
 private slots:
 	void queryOpts();
 	void setAdvanced(bool);
+	void setStartBtnText(QProcess::ProcessState);
 };
 
 
