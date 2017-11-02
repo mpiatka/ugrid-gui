@@ -10,7 +10,7 @@ class PreviewWidget : public QOpenGLWidget{
 public:
 	PreviewWidget(QWidget *parent) : QOpenGLWidget(parent) {
 		connect(&timer, SIGNAL(timeout()), this, SLOT(update()));
-		timer.start(50);
+		timer.start(1000/24);
   	}
 
 protected:
