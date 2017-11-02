@@ -54,15 +54,15 @@ static void compileShader(GLuint shaderId, QOpenGLFunctions *f){
 
 
 static unsigned char pixels[] = {
-	255, 0, 0,   0, 0, 255,   0, 255, 0,   255, 255, 255,
-	255, 0, 0,   0, 0, 255,   0, 255, 0,   255, 255, 255,
-	255, 0, 0,   0, 0, 255,   0, 255, 0,   255, 255, 255,
-	255, 0, 0,   0, 0, 255,   0, 255, 0,   255, 255, 255
+	255, 0, 0,   0, 255, 0,   0, 0, 255,   255, 255, 255,
+	255, 0, 0,   0, 255, 0,   0, 0, 255,   255, 255, 255,
+	255, 0, 0,   0, 255, 0,   0, 0, 255,   255, 255, 255,
+	255, 0, 0,   0, 255, 0,   0, 0, 255,   255, 255, 255
 };
 
 void PreviewWidget::initializeGL(){
 	QOpenGLFunctions *f = QOpenGLContext::currentContext()->functions();
-	f->glClearColor(1.0f, 1.0f, 0.0f, 1.0f);
+	f->glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
 	f->glGenBuffers(1, &vertexBuffer);
 	f->glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
