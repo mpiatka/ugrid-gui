@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1097</width>
-    <height>729</height>
+    <height>696</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -28,6 +28,9 @@
       </item>
       <item>
        <widget class="QTextBrowser" name="terminal">
+        <property name="enabled">
+         <bool>true</bool>
+        </property>
         <property name="sizePolicy">
          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
           <horstretch>0</horstretch>
@@ -645,7 +648,7 @@
     <property name="title">
      <string>&amp;Tools</string>
     </property>
-    <addaction name="actionShow_Tterminal"/>
+    <addaction name="actionShow_Terminal"/>
     <addaction name="actionAdvanced"/>
     <addaction name="separator"/>
     <addaction name="actionRefresh"/>
@@ -671,15 +674,15 @@
     <string>About UltraGrid</string>
    </property>
   </action>
-  <action name="actionShow_Tterminal">
+  <action name="actionShow_Terminal">
    <property name="checkable">
-    <bool>true</bool>
+    <bool>false</bool>
    </property>
    <property name="checked">
-    <bool>true</bool>
+    <bool>false</bool>
    </property>
    <property name="text">
-    <string>Show &amp;Terminal</string>
+    <string>Show &amp;Log</string>
    </property>
   </action>
   <action name="actionRefresh">
@@ -718,22 +721,6 @@
     <hint type="destinationlabel">
      <x>556</x>
      <y>362</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>actionShow_Tterminal</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>terminal</receiver>
-   <slot>setVisible(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>831</x>
-     <y>244</y>
     </hint>
    </hints>
   </connection>

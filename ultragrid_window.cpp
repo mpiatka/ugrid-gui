@@ -4,6 +4,7 @@
 
 UltragridWindow::UltragridWindow(QWidget *parent): QMainWindow(parent){
 	ui.setupUi(this);
+	ui.terminal->setVisible(false);
 
 	QStringList args = QCoreApplication::arguments();
 	int index = args.indexOf("--with-uv");
@@ -25,6 +26,7 @@ UltragridWindow::UltragridWindow(QWidget *parent): QMainWindow(parent){
 	connect(ui.editCheckBox, SIGNAL(toggled(bool)), this, SLOT(setArgs()));
 	connect(ui.actionRefresh, SIGNAL(triggered()), this, SLOT(queryOpts()));
 	connect(ui.actionAdvanced, SIGNAL(toggled(bool)), this, SLOT(setAdvanced(bool)));
+	connect(ui.actionShow_Terminal, SIGNAL(triggered()), this, SLOT(showLog()));
 
 	opts.emplace_back(new SourceOption(&ui,
 				ultragridExecutable));
@@ -65,11 +67,14 @@ void UltragridWindow::about(){
 
 void UltragridWindow::outputAvailable(){
 	//ui.terminal->append(process.readAll());
+	
+	QString str = process.readAll();
 #if 1
 	ui.terminal->moveCursor(QTextCursor::End);
-	ui.terminal->insertPlainText(process.readAll());
+	ui.terminal->insertPlainText(str);
 	ui.terminal->moveCursor(QTextCursor::End);
 #endif
+	log.write(str);
 }
 
 void UltragridWindow::start(){
@@ -83,6 +88,7 @@ void UltragridWindow::start(){
 	command += " ";
 	command += launchArgs;
 	process.setProcessChannelMode(QProcess::MergedChannels);
+	log.write("Command: " + command + "\n\n");
 	process.start(command);
 }
 
@@ -115,4 +121,8 @@ void UltragridWindow::setAdvanced(bool adv){
 		opt->setAdvanced(adv);
 	}
 	queryOpts();
+}
+
+void UltragridWindow::showLog(){
+	log.show();
 }
