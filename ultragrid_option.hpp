@@ -65,16 +65,22 @@ private slots:
 };
 
 class DisplayOption : public UltragridOption{
+	Q_OBJECT
 public:
 	DisplayOption(Ui::UltragridWindow *ui,
 			const QString& ultragridExecutable);
 
 	QString getLaunchParam() override;
 	void queryAvailOpts() override;
+
 private:
 	Ui::UltragridWindow *ui;
+	bool preview;
 
 	const static QStringList whiteList;
+
+private slots:
+	void enablePreview(bool);
 };
 
 class VideoCompressOption : public UltragridOption{
