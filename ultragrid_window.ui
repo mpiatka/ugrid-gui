@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1097</width>
+    <width>1115</width>
     <height>696</height>
    </rect>
   </property>
@@ -194,9 +194,20 @@
              <item row="0" column="1">
               <widget class="QComboBox" name="videoDisplayComboBox"/>
              </item>
+             <item row="1" column="0">
+              <widget class="QCheckBox" name="previewCheckBox">
+               <property name="text">
+                <string>Preview</string>
+               </property>
+               <property name="checked">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
             </layout>
             <zorder>videoDisplayComboBox</zorder>
             <zorder>label_3</zorder>
+            <zorder>previewCheckBox</zorder>
            </widget>
           </item>
           <item>
@@ -631,7 +642,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1097</width>
+     <width>1115</width>
      <height>22</height>
     </rect>
    </property>
@@ -865,6 +876,22 @@
     <hint type="destinationlabel">
      <x>940</x>
      <y>611</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>previewCheckBox</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>openGLWidget</receiver>
+   <slot>setVisible(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>326</x>
+     <y>484</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>282</x>
+     <y>215</y>
     </hint>
    </hints>
   </connection>

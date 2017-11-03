@@ -176,6 +176,8 @@ DisplayOption::DisplayOption(Ui::UltragridWindow *ui,
 	ui(ui)
 {
 	connect(ui->videoDisplayComboBox, SIGNAL(currentIndexChanged(int)), this, SIGNAL(changed()));
+	connect(ui->previewCheckBox, SIGNAL(toggled(bool)), this, SLOT(enablePreview(bool)));
+	preview = ui->previewCheckBox->isChecked();
 }
 
 QString DisplayOption::getLaunchParam(){
@@ -184,8 +186,16 @@ QString DisplayOption::getLaunchParam(){
 
 	if(disp->currentText() != "none"){
 		param += "-d ";
+		if(preview){
+			param += "multiplier:";
+		}
 		param += disp->currentText();
+		if(preview){
+			param += "#preview";
+		}
 		param += " ";
+	} else if(preview){
+		param += "-d preview ";
 	}
 
 	return param;
@@ -206,6 +216,11 @@ void DisplayOption::queryAvailOpts(){
 	}
 
 	setItem(disp, prevText);
+}
+
+void DisplayOption::enablePreview(bool enable){
+	preview = enable;
+	emit changed();
 }
 
 VideoCompressOption::VideoCompressOption(Ui::UltragridWindow *ui,
