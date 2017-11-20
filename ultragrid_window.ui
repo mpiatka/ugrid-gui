@@ -19,7 +19,7 @@
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout_5" stretch="0,6,0,0">
     <item>
-     <widget class="QLabel" name="label_16">
+     <widget class="QLabel" name="previewLabel">
       <property name="text">
        <string>Preview</string>
       </property>
@@ -912,6 +912,22 @@
     <hint type="destinationlabel">
      <x>282</x>
      <y>215</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>previewCheckBox</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>previewLabel</receiver>
+   <slot>setVisible(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>322</x>
+     <y>481</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>551</x>
+     <y>39</y>
     </hint>
    </hints>
   </connection>
