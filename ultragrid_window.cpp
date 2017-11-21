@@ -58,12 +58,16 @@ UltragridWindow::UltragridWindow(QWidget *parent): QMainWindow(parent){
 }
 
 void UltragridWindow::about(){
-	QMessageBox::about(this,"About UltraGrid",
-		"UltraGrid from CESNET is a software "
-		"implementation of high-quality low-latency video and audio transmissions using commodity PC and Mac hardware.\n\n"
-		"More information can be found at http://www.ultragrid.cz\n\n"
+	QMessageBox aboutBox(this);
+	aboutBox.setWindowTitle("About UltraGrid");
+	aboutBox.setTextFormat(Qt::RichText);
+	aboutBox.setText( "UltraGrid from CESNET is a software "
+		"implementation of high-quality low-latency video and audio transmissions using commodity PC and Mac hardware.<br><br>"
+		"More information can be found at <a href='http://www.ultragrid.cz'>http://www.ultragrid.cz</a><br><br>"
 		"Please read documents distributed with the product to find out current and former developers."
 		);
+	aboutBox.setStandardButtons(QMessageBox::Ok);
+	aboutBox.exec();
 }
 
 void UltragridWindow::outputAvailable(){
